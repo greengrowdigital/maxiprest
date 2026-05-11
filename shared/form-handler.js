@@ -116,8 +116,9 @@
     let valid = true;
     $$('.mp-field.is-error', form).forEach(f => f.classList.remove('is-error'));
 
-    const requiredFields = $$('[data-required="true"]', form);
+    const requiredFields = $$('input[data-required="true"], select[data-required="true"], textarea[data-required="true"]', form);
     requiredFields.forEach(field => {
+      if (field.type === 'file') return;
       const val = (field.value || '').trim();
       if (!val) { setError(field, 'Campo obligatorio'); valid = false; }
     });
