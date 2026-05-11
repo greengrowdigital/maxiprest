@@ -142,7 +142,7 @@
     const ingreso = form.ingresoMensual;
     if (ingreso && ingreso.value) {
       const n = Number(ingreso.value);
-      if (isNaN(n) || n < 650) { setError(ingreso, 'Ingreso mínimo B/. 650'); valid = false; }
+      if (isNaN(n) || n < 600) { setError(ingreso, 'Ingreso mínimo B/. 600 para aplicar'); valid = false; }
     }
 
     const aTerm = form.aceptaTerminos;
@@ -290,6 +290,32 @@
       field.addEventListener('input', () => clearError(field));
       field.addEventListener('change', () => clearError(field));
     });
+
+    const fNac = form.fechaNacimiento;
+    if (fNac) {
+      fNac.addEventListener('blur', () => {
+        if (!fNac.value) return;
+        const age = calcAge(fNac.value);
+        if (age < 20) setError(fNac, 'Debes tener al menos 20 años para aplicar');
+        else if (age > 100) setError(fNac, 'Fecha no válida');
+      });
+      fNac.addEventListener('change', () => {
+        if (!fNac.value) return;
+        const age = calcAge(fNac.value);
+        if (age < 20) setError(fNac, 'Debes tener al menos 20 años para aplicar');
+      });
+    }
+
+    const ingreso = form.ingresoMensual;
+    if (ingreso) {
+      const check = () => {
+        if (!ingreso.value) return;
+        const n = Number(ingreso.value);
+        if (isNaN(n) || n < 600) setError(ingreso, 'Ingreso mínimo B/. 600 para aplicar');
+      };
+      ingreso.addEventListener('blur', check);
+      ingreso.addEventListener('change', check);
+    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
