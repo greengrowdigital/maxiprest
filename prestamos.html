@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Préstamos personales | MaxiPrest Panamá</title>
+  <meta name="description" content="Préstamos personales desde B/. 1,000 hasta B/. 100,000 en Panamá. Plazos flexibles, sin garantía hipotecaria, atención humana." />
+  <link rel="icon" href="/public/logo-mark.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="/shared/theme.css" rel="stylesheet" />
+  <style>
+    .page-hero {
+      padding: calc(var(--mp-nav-h) + 80px) 24px 80px;
+      text-align: center;
+      position: relative;
+      background: var(--mp-bg);
+    }
+    .page-hero h1 { font-family: var(--mp-font-display); font-weight: 400; font-size: clamp(48px, 8vw, 112px); line-height: 0.98; letter-spacing: -0.025em; margin: 24px auto 24px; max-width: 1000px; }
+    .page-hero h1 em { color: var(--mp-gold-deep); font-style: italic; }
+    .page-hero p { color: var(--mp-ink-mute); font-size: 18px; max-width: 600px; margin: 0 auto; }
+
+    /* Tier cards */
+    .tiers {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      margin-top: 64px;
+      border: 1px solid var(--mp-line);
+      border-radius: var(--mp-radius-lg);
+      overflow: hidden;
+    }
+    .tier {
+      padding: 48px 32px;
+      border-right: 1px solid var(--mp-line);
+      transition: background .4s var(--mp-ease);
+      cursor: default;
+      position: relative;
+    }
+    .tier:last-child { border-right: 0; }
+    .tier:hover { background: var(--mp-gold-tint); }
+    .tier.featured { background: var(--mp-ink); color: var(--mp-bg); }
+    .tier.featured .tier-amt { color: var(--mp-gold); }
+    .tier.featured .tier-desc, .tier.featured .tier-plazo span { color: rgba(255,255,255,0.7); }
+    .tier.featured .tier-line { background: rgba(255,255,255,0.1); }
+    .tier-tag { font-family: var(--mp-font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mp-gold-deep); }
+    .tier.featured .tier-tag { color: var(--mp-gold); }
+    .tier-amt { font-family: var(--mp-font-display); font-size: clamp(36px, 4vw, 52px); font-weight: 400; line-height: 1; letter-spacing: -0.02em; margin: 16px 0; color: var(--mp-ink); }
+    .tier-mono { font-family: var(--mp-font-mono); font-size: 0.85em; }
+    .tier-desc { font-size: 13px; color: var(--mp-ink-mute); line-height: 1.6; margin-bottom: 24px; min-height: 64px; }
+    .tier-line { height: 1px; background: var(--mp-line); margin: 24px 0; }
+    .tier-plazo { font-size: 13px; }
+    .tier-plazo strong { display: block; font-family: var(--mp-font-display); font-size: 22px; font-weight: 500; margin-top: 4px; color: inherit; }
+    .tier-plazo span { color: var(--mp-ink-mute); letter-spacing: 0.06em; text-transform: uppercase; font-size: 11px; font-weight: 600; }
+    @media (max-width: 900px) {
+      .tiers { grid-template-columns: 1fr 1fr; }
+      .tier { border-bottom: 1px solid var(--mp-line); }
+      .tier:nth-child(2n) { border-right: 0; }
+      .tier:nth-last-child(-n+2) { border-bottom: 0; }
+    }
+    @media (max-width: 540px) {
+      .tiers { grid-template-columns: 1fr; }
+      .tier { border-right: 0; border-bottom: 1px solid var(--mp-line); }
+      .tier:last-child { border-bottom: 0; }
+    }
+
+    /* Simulator */
+    .simulator {
+      background: var(--mp-bg-soft);
+      padding: clamp(60px, 8vw, 100px) 32px;
+      border-radius: var(--mp-radius-lg);
+      margin-top: 96px;
+      border: 1px solid var(--mp-line);
+    }
+    .sim-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: center; }
+    .sim-output {
+      background: var(--mp-ink);
+      color: var(--mp-bg);
+      padding: 48px;
+      border-radius: var(--mp-radius-lg);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .sim-output::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, var(--mp-gold-deep) 0%, transparent 40%);
+      opacity: .15;
+      animation: rotate-slow 30s linear infinite;
+    }
+    @keyframes rotate-slow { to { transform: rotate(360deg); } }
+    .sim-output > * { position: relative; z-index: 1; }
+    .sim-output .lbl { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mp-gold); margin-bottom: 16px; }
+    .sim-output .amt { font-family: var(--mp-font-mono); font-size: clamp(40px, 6vw, 64px); font-weight: 600; color: var(--mp-gold); letter-spacing: -0.02em; line-height: 1; }
+    .sim-output .freq { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 12px; }
+    .sim-output .disclaimer { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 32px; max-width: 280px; margin-left: auto; margin-right: auto; line-height: 1.5; }
+
+    .slider-block { margin-bottom: 40px; }
+    .slider-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+    .slider-label strong { font-family: var(--mp-font-display); font-size: 32px; font-weight: 400; color: var(--mp-ink); }
+    .slider-label span { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mp-ink-mute); font-weight: 600; }
+    .slider {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 4px;
+      background: var(--mp-line-strong);
+      border-radius: 4px;
+      outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--mp-ink);
+      border: 3px solid var(--mp-gold);
+      cursor: pointer;
+      transition: transform .2s var(--mp-ease);
+    }
+    .slider::-moz-range-thumb {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--mp-ink);
+      border: 3px solid var(--mp-gold);
+      cursor: pointer;
+    }
+    .slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .slider-marks { display: flex; justify-content: space-between; margin-top: 12px; font-family: var(--mp-font-mono); font-size: 11px; color: var(--mp-ink-soft); }
+
+    @media (max-width: 900px) {
+      .sim-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    /* Uses grid */
+    .uses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--mp-line); border: 1px solid var(--mp-line); border-radius: var(--mp-radius-lg); overflow: hidden; margin-top: 56px; }
+    .use {
+      background: var(--mp-bg);
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      transition: background .35s var(--mp-ease);
+    }
+    .use:hover { background: var(--mp-bg-soft); }
+    .use-icon { width: 44px; height: 44px; color: var(--mp-gold-deep); }
+    .use-name { font-family: var(--mp-font-display); font-size: 22px; font-weight: 400; letter-spacing: -0.01em; }
+    .use-desc { font-size: 13px; color: var(--mp-ink-mute); line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+  <div id="mp-nav"></div>
+
+  <section class="page-hero">
+    <div class="mp-hero-grid-bg"></div>
+    <span class="mp-eyebrow" data-mp-reveal>Producto</span>
+    <h1 data-mp-reveal data-mp-reveal-delay="100">
+      Préstamos diseñados<br/>para <em>Panamá</em>.
+    </h1>
+    <p data-mp-reveal data-mp-reveal-delay="200">
+      Cuatro tiers de financiamiento con plazos adaptados a tu capacidad de pago. Elige el que mejor se ajusta a tu necesidad.
+    </p>
+  </section>
+
+  <section class="mp-section" style="padding-top: 0;">
+    <div class="mp-container">
+      <div class="tiers" data-mp-reveal>
+        <div class="tier">
+          <div class="tier-tag">Inicial</div>
+          <div class="tier-amt"><span class="tier-mono">B/.</span> 1K – 10K</div>
+          <p class="tier-desc">Para emergencias, electrodomésticos o pequeñas reparaciones del hogar.</p>
+          <div class="tier-line"></div>
+          <div class="tier-plazo">
+            <span>Plazo sugerido</span>
+            <strong>12 meses</strong>
+          </div>
+        </div>
+        <div class="tier featured">
+          <div class="tier-tag">Más solicitado</div>
+          <div class="tier-amt"><span class="tier-mono">B/.</span> 10K – 25K</div>
+          <p class="tier-desc">Ideal para consolidar deudas, vehículo usado, o capital de trabajo inicial.</p>
+          <div class="tier-line"></div>
+          <div class="tier-plazo">
+            <span>Plazo sugerido</span>
+            <strong>24 meses</strong>
+          </div>
+        </div>
+        <div class="tier">
+          <div class="tier-tag">Mediano</div>
+          <div class="tier-amt"><span class="tier-mono">B/.</span> 25K – 50K</div>
+          <p class="tier-desc">Remodelación de casa, vehículo nuevo, expansión de negocio mediano.</p>
+          <div class="tier-line"></div>
+          <div class="tier-plazo">
+            <span>Plazo sugerido</span>
+            <strong>48 meses</strong>
+          </div>
+        </div>
+        <div class="tier">
+          <div class="tier-tag">Premium</div>
+          <div class="tier-amt"><span class="tier-mono">B/.</span> 50K – 100K</div>
+          <p class="tier-desc">Inversión inmobiliaria, expansión empresarial seria, proyectos de alto impacto.</p>
+          <div class="tier-line"></div>
+          <div class="tier-plazo">
+            <span>Plazo sugerido</span>
+            <strong>72 meses</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mp-section" style="padding-top: 0;">
+    <div class="mp-container">
+      <span class="mp-eyebrow" data-mp-reveal>Simulador</span>
+      <h2 class="mp-display" data-mp-reveal data-mp-reveal-delay="100" style="font-size: clamp(36px, 5vw, 56px); margin: 24px 0 16px; max-width: 760px;">
+        Estima tu cuota en <em style="font-style: italic; color: var(--mp-gold-deep);">segundos</em>.
+      </h2>
+      <p class="mp-text-mute" data-mp-reveal data-mp-reveal-delay="150" style="max-width: 540px;">
+        Mueve los sliders para ver una estimación visual. La cuota real se calcula durante la evaluación de tu solicitud.
+      </p>
+
+      <div class="simulator" data-mp-reveal data-mp-reveal-delay="200">
+        <div class="sim-grid">
+          <div>
+            <div class="slider-block">
+              <div class="slider-label">
+                <span>Monto solicitado</span>
+                <strong id="simMontoLabel">B/. 15,000</strong>
+              </div>
+              <input class="slider" type="range" id="simMonto" min="1000" max="100000" step="1000" value="15000" />
+              <div class="slider-marks"><span>B/. 1K</span><span>B/. 100K</span></div>
+            </div>
+            <div class="slider-block">
+              <div class="slider-label">
+                <span>Plazo (meses)</span>
+                <strong id="simPlazoLabel">24 meses</strong>
+              </div>
+              <input class="slider" type="range" id="simPlazo" min="12" max="72" step="6" value="24" />
+              <div class="slider-marks"><span>12 m</span><span>72 m</span></div>
+            </div>
+            <a class="mp-btn mp-btn-gold-solid" href="/aplica" style="margin-top: 16px;">
+              Aplicar con estos valores
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <div class="sim-output">
+            <div class="lbl">Cuota mensual estimada</div>
+            <div class="amt" id="simCuota">B/. 730</div>
+            <div class="freq">por mes durante 24 meses</div>
+            <p class="disclaimer">* Cálculo referencial al 15% anual. La tasa final se determina tras la evaluación crediticia.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mp-section" style="background: var(--mp-bg-soft);">
+    <div class="mp-container">
+      <span class="mp-eyebrow" data-mp-reveal>Para qué puedes usarlo</span>
+      <h2 class="mp-display" data-mp-reveal data-mp-reveal-delay="100" style="font-size: clamp(36px, 5vw, 56px); margin: 24px 0 0; max-width: 760px;">
+        Capital sin <em style="font-style: italic; color: var(--mp-gold-deep);">condiciones</em> sobre el destino.
+      </h2>
+      <p class="mp-text-mute" data-mp-reveal data-mp-reveal-delay="150" style="max-width: 540px; margin-top: 16px;">
+        Tu préstamo personal es tuyo. Decide tú cómo lo usas. Estos son algunos de los destinos más comunes entre nuestros clientes.
+      </p>
+
+      <div class="uses-grid">
+        <div class="use" data-mp-reveal>
+          <svg class="use-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="8" y="14" width="32" height="26" rx="3"/><path d="M16 14V8h16v6M16 26h16"/></svg>
+          <div class="use-name">Negocio</div>
+          <div class="use-desc">Capital de trabajo, inventario, expansión.</div>
+        </div>
+        <div class="use" data-mp-reveal data-mp-reveal-delay="50">
+          <svg class="use-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 22l16-12 16 12v18H8V22z"/><path d="M18 40V28h12v12"/></svg>
+          <div class="use-name">Hogar</div>
+          <div class="use-desc">Remodelación, mejoras, mudanza.</div>
+        </div>
+        <div class="use" data-mp-reveal data-mp-reveal-delay="100">
+          <svg class="use-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 8l16 8-16 8-16-8 16-8z"/><path d="M8 16v12l16 8 16-8V16"/></svg>
+          <div class="use-name">Educación</div>
+          <div class="use-desc">Maestría, certificación, idiomas.</div>
+        </div>
+        <div class="use" data-mp-reveal data-mp-reveal-delay="150">
+          <svg class="use-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 42s-14-8-14-20a8 8 0 0114-5 8 8 0 0114 5c0 12-14 20-14 20z"/></svg>
+          <div class="use-name">Salud</div>
+          <div class="use-desc">Procedimientos, tratamientos, urgencias.</div>
+        </div>
+        <div class="use" data-mp-reveal data-mp-reveal-delay="200">
+          <svg class="use-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 26l4-10h24l4 10v10h-4v-2H12v2H8V26z"/><circle cx="16" cy="32" r="2"/><circle cx="32" cy="32" r="2"/></svg>
+          <div class="use-name">Vehículo</div>
+          <div class="use-desc">Auto, moto, reparaciones mayores.</div>
+        </div>
+        <div class="use" data-mp-reveal data-mp-reveal-delay="250">
+          <svg class="use-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 14h32v8H8zM8 26h32v8H8z"/><circle cx="14" cy="18" r="2"/><circle cx="14" cy="30" r="2"/></svg>
+          <div class="use-name">Consolidación</div>
+          <div class="use-desc">Une varias deudas en una sola cuota.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 64px; text-align: center;" data-mp-reveal>
+        <a class="mp-btn mp-btn-gold-solid" href="/aplica" style="padding: 22px 40px;">
+          Solicitar mi préstamo
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div id="mp-footer"></div>
+  <script src="/shared/nav-footer.js"></script>
+  <script>
+    (function() {
+      const monto = document.getElementById('simMonto');
+      const plazo = document.getElementById('simPlazo');
+      const lblMonto = document.getElementById('simMontoLabel');
+      const lblPlazo = document.getElementById('simPlazoLabel');
+      const cuotaEl = document.getElementById('simCuota');
+      const RATE = 0.15 / 12;
+
+      function fmt(n) { return 'B/. ' + Math.round(n).toLocaleString('es-PA'); }
+
+      function update() {
+        const m = +monto.value;
+        const p = +plazo.value;
+        lblMonto.textContent = fmt(m);
+        lblPlazo.textContent = p + ' meses';
+        const cuota = m * (RATE * Math.pow(1 + RATE, p)) / (Math.pow(1 + RATE, p) - 1);
+        cuotaEl.textContent = fmt(cuota);
+        document.querySelector('.sim-output .freq').textContent = `por mes durante ${p} meses`;
+      }
+      monto.addEventListener('input', update);
+      plazo.addEventListener('input', update);
+      update();
+    })();
+  </script>
+</body>
+</html>

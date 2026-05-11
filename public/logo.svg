@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" fill="none">
+  <rect x="1" y="1" width="54" height="54" rx="13" stroke="#0A0A0A" stroke-width="1.5"/>
+  <path d="M15 41V18L28 32L41 18V41" stroke="#C9A961" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="28" cy="46" r="2" fill="#C9A961"/>
+  <text x="72" y="36" font-family="Fraunces, Georgia, serif" font-size="28" font-weight="500" fill="#0A0A0A" letter-spacing="-0.5">Maxi<tspan fill="#A88A47">Prest</tspan></text>
+</svg>

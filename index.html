@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MaxiPrest — Préstamos personales hasta B/. 100,000 en Panamá</title>
+  <meta name="description" content="Préstamos personales hasta B/. 100,000 para residentes en Panamá. Aprobación en 24 horas, sin garantía hipotecaria, atención humana." />
+  <meta property="og:title" content="MaxiPrest — Préstamos personales hasta B/. 100,000" />
+  <meta property="og:description" content="Aprobación en 24h. Préstamos hasta B/. 100,000 para residentes en Panamá." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="/public/logo-mark.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="/shared/theme.css" rel="stylesheet" />
+  <style>
+    /* Hero */
+    .hero {
+      position: relative;
+      padding: calc(var(--mp-nav-h) + 80px) 24px 120px;
+      overflow: hidden;
+      background: var(--mp-bg);
+    }
+    .hero-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 64px;
+      align-items: center;
+      position: relative;
+    }
+    .hero-h1 {
+      font-family: var(--mp-font-display);
+      font-size: clamp(48px, 7vw, 104px);
+      font-weight: 400;
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+      margin: 28px 0 24px;
+      color: var(--mp-ink);
+    }
+    .hero-h1 em { font-style: italic; color: var(--mp-gold-deep); font-weight: 300; }
+    .hero-h1 .mp-mono-amt { font-family: var(--mp-font-mono); font-weight: 600; font-size: 0.78em; letter-spacing: -0.03em; }
+    .hero-sub { font-size: clamp(16px, 1.4vw, 19px); color: var(--mp-ink-mute); max-width: 520px; line-height: 1.6; margin-bottom: 36px; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-meta { display: flex; gap: 32px; margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--mp-line); flex-wrap: wrap; }
+    .hero-meta-item .num { font-family: var(--mp-font-display); font-size: 36px; color: var(--mp-ink); letter-spacing: -0.02em; }
+    .hero-meta-item .lbl { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mp-ink-mute); }
+
+    .hero-visual {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      border-radius: var(--mp-radius-lg);
+      overflow: hidden;
+      background: linear-gradient(160deg, var(--mp-gold-tint) 0%, var(--mp-bg-soft) 60%, var(--mp-bg) 100%);
+      transform: translateZ(0);
+    }
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(60% 50% at 70% 20%, var(--mp-gold-soft) 0%, transparent 60%),
+        radial-gradient(40% 40% at 20% 90%, var(--mp-gold-tint) 0%, transparent 60%);
+      mix-blend-mode: multiply;
+    }
+    .hero-card-money {
+      position: absolute;
+      top: 12%;
+      right: -8%;
+      width: 78%;
+      aspect-ratio: 1.6/1;
+      background: var(--mp-ink);
+      border-radius: 22px;
+      padding: 26px;
+      color: var(--mp-bg);
+      box-shadow: var(--mp-shadow-lg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transform: rotate(-3deg);
+    }
+    .hero-card-money::after {
+      content: '';
+      position: absolute;
+      top: 22px; right: 22px;
+      width: 56px; height: 36px;
+      background: linear-gradient(135deg, var(--mp-gold) 0%, var(--mp-gold-deep) 100%);
+      border-radius: 6px;
+      opacity: .9;
+    }
+    .hero-card-money .amt { font-family: var(--mp-font-mono); font-size: 32px; color: var(--mp-gold); font-weight: 600; }
+    .hero-card-money .lbl { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; opacity: .6; }
+    .hero-card-money .row { display: flex; justify-content: space-between; align-items: flex-end; }
+    .hero-card-money .holder { font-size: 14px; font-weight: 500; }
+
+    .hero-card-approval {
+      position: absolute;
+      bottom: 12%;
+      left: -6%;
+      background: var(--mp-bg);
+      border: 1px solid var(--mp-line);
+      border-radius: 18px;
+      padding: 18px 22px;
+      box-shadow: var(--mp-shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transform: rotate(2deg);
+    }
+    .hero-card-approval .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--mp-success); position: relative; }
+    .hero-card-approval .dot::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--mp-success); opacity: .35; animation: mp-pulse 2s var(--mp-ease) infinite; }
+    @keyframes mp-pulse { 0% { transform: scale(.9); opacity: .5; } 70% { transform: scale(1.6); opacity: 0; } 100% { opacity: 0; } }
+    .hero-card-approval .txt { font-size: 13px; }
+    .hero-card-approval .txt strong { display:block; color: var(--mp-ink); font-weight: 600; }
+    .hero-card-approval .txt span { color: var(--mp-ink-mute); }
+
+    @media (max-width: 980px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .hero-visual { max-width: 480px; margin: 0 auto; }
+    }
+
+    /* Marquee */
+    .marquee {
+      padding: 32px 0;
+      border-top: 1px solid var(--mp-line);
+      border-bottom: 1px solid var(--mp-line);
+      overflow: hidden;
+      background: var(--mp-bg-soft);
+    }
+    .marquee-track {
+      display: flex;
+      gap: 64px;
+      animation: scroll-x 40s linear infinite;
+      width: max-content;
+    }
+    .marquee-item { font-family: var(--mp-font-display); font-size: 28px; color: var(--mp-ink-mute); display: inline-flex; align-items: center; gap: 64px; }
+    .marquee-item::after { content: '✦'; color: var(--mp-gold); font-size: 16px; }
+    @keyframes scroll-x { to { transform: translateX(-50%); } }
+
+    /* Benefits */
+    .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 56px; }
+    .benefit { padding: 36px 28px; }
+    .benefit-num { font-family: var(--mp-font-mono); color: var(--mp-gold-deep); font-size: 14px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+    .benefit-num::after { content: ''; flex: 1; height: 1px; background: var(--mp-line); }
+    .benefit-icon { width: 48px; height: 48px; color: var(--mp-gold-deep); margin-bottom: 24px; }
+    .benefit h3 { font-family: var(--mp-font-display); font-size: 26px; font-weight: 400; margin: 0 0 12px; letter-spacing: -0.01em; }
+    .benefit p { margin: 0; color: var(--mp-ink-mute); font-size: 15px; line-height: 1.65; }
+
+    /* Steps */
+    .steps {
+      background: var(--mp-ink);
+      color: var(--mp-bg);
+      padding: clamp(80px, 12vw, 140px) 24px;
+      overflow: hidden;
+      position: relative;
+    }
+    .steps .mp-eyebrow { color: var(--mp-gold); }
+    .steps-h2 { font-family: var(--mp-font-display); color: var(--mp-bg); font-size: clamp(40px, 5vw, 64px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; margin: 24px 0 64px; max-width: 800px; }
+    .steps-h2 em { color: var(--mp-gold); font-style: italic; }
+    .step { display: grid; grid-template-columns: 100px 1fr 1fr; gap: 48px; padding: 48px 0; border-top: 1px solid rgba(255,255,255,0.08); align-items: center; }
+    .step:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .step-num { font-family: var(--mp-font-display); font-size: 64px; color: var(--mp-gold); font-weight: 300; }
+    .step-title { font-family: var(--mp-font-display); font-size: 32px; font-weight: 400; letter-spacing: -0.015em; }
+    .step-desc { color: rgba(255,255,255,0.6); font-size: 15px; line-height: 1.7; }
+    @media (max-width: 760px) {
+      .step { grid-template-columns: 1fr; gap: 12px; padding: 32px 0; }
+    }
+
+    /* Testimonials */
+    .testimonial-card { padding: 48px; background: var(--mp-bg-soft); border-radius: var(--mp-radius-lg); border: 1px solid var(--mp-line); position: relative; }
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 12px; left: 32px;
+      font-family: var(--mp-font-display);
+      font-size: 120px;
+      color: var(--mp-gold-soft);
+      line-height: 1;
+    }
+    .testimonial-quote { font-family: var(--mp-font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.4; font-weight: 400; color: var(--mp-ink); position: relative; max-width: 720px; }
+    .testimonial-author { display: flex; align-items: center; gap: 16px; margin-top: 32px; }
+    .testimonial-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--mp-gold-soft), var(--mp-gold-deep)); display: flex; align-items: center; justify-content: center; font-family: var(--mp-font-display); font-size: 18px; color: var(--mp-ink); font-weight: 500; }
+    .testimonial-name { font-weight: 600; font-size: 14px; color: var(--mp-ink); }
+    .testimonial-role { font-size: 12px; color: var(--mp-ink-mute); }
+
+    /* Final CTA */
+    .final-cta {
+      padding: clamp(80px, 12vw, 140px) 24px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 30%, var(--mp-gold-tint) 0%, transparent 60%),
+        var(--mp-bg);
+    }
+    .final-cta h2 { font-family: var(--mp-font-display); font-size: clamp(40px, 6vw, 84px); line-height: 1.02; font-weight: 400; margin: 0 0 24px; letter-spacing: -0.025em; }
+    .final-cta h2 em { color: var(--mp-gold-deep); font-style: italic; }
+    .final-cta p { color: var(--mp-ink-mute); font-size: 17px; max-width: 600px; margin: 0 auto 40px; }
+  </style>
+</head>
+<body>
+
+  <div id="mp-nav"></div>
+
+  <section class="hero">
+    <div class="mp-hero-grid-bg"></div>
+    <div class="hero-inner">
+      <div>
+        <span class="mp-eyebrow" data-mp-reveal>Préstamos personales · Panamá</span>
+        <h1 class="hero-h1" data-mp-reveal data-mp-reveal-delay="100">
+          Capital cuando<br/>lo <em>necesitas</em>.<br/>
+          Hasta <span class="mp-mono-amt">B/. 100,000</span>.
+        </h1>
+        <p class="hero-sub" data-mp-reveal data-mp-reveal-delay="200">
+          Préstamos personales para residentes en Panamá. Aprobación en menos de 24 horas, sin garantías hipotecarias, con atención humana de principio a fin.
+        </p>
+        <div class="hero-ctas" data-mp-reveal data-mp-reveal-delay="300">
+          <a class="mp-btn mp-btn-gold-solid" href="/aplica">
+            Aplicar ahora
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a class="mp-btn mp-btn-ghost" href="/requisitos">Ver requisitos</a>
+        </div>
+        <div class="hero-meta" data-mp-reveal data-mp-reveal-delay="400">
+          <div class="hero-meta-item">
+            <div class="num"><span data-counter="5000">0</span>+</div>
+            <div class="lbl">Clientes activos</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="num"><span data-counter="24">0</span>h</div>
+            <div class="lbl">Aprobación promedio</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="num">B/.<span data-counter="100">0</span>K</div>
+            <div class="lbl">Monto máximo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual" data-mp-reveal data-mp-reveal-delay="200" id="heroVisual">
+        <div class="hero-card-money" id="heroCardMoney">
+          <div>
+            <div class="lbl">Tu préstamo aprobado</div>
+            <div class="amt">B/. 25,000.00</div>
+          </div>
+          <div class="row">
+            <div class="holder">A. Morales</div>
+            <div style="font-family: var(--mp-font-mono); font-size: 11px; opacity: .5;">MAXIPREST · PA</div>
+          </div>
+        </div>
+        <div class="hero-card-approval" id="heroCardApproval">
+          <span class="dot"></span>
+          <div class="txt">
+            <strong>Aprobado en 18h</strong>
+            <span>Sin garante hipotecaria</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Residentes en Panamá</span>
+      <span class="marquee-item">Hasta B/. 100,000</span>
+      <span class="marquee-item">Sin garantía hipotecaria</span>
+      <span class="marquee-item">Aprobación en 24h</span>
+      <span class="marquee-item">Atención humana</span>
+      <span class="marquee-item">Residentes en Panamá</span>
+      <span class="marquee-item">Hasta B/. 100,000</span>
+      <span class="marquee-item">Sin garantía hipotecaria</span>
+      <span class="marquee-item">Aprobación en 24h</span>
+      <span class="marquee-item">Atención humana</span>
+    </div>
+  </div>
+
+  <section class="mp-section">
+    <div class="mp-container">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end;">
+        <div>
+          <span class="mp-eyebrow" data-mp-reveal>Por qué MaxiPrest</span>
+          <h2 class="mp-display" data-mp-reveal data-mp-reveal-delay="100" style="font-size: clamp(36px, 5vw, 64px); margin: 24px 0 0;">
+            Servicio que se siente <em style="font-style: italic; color: var(--mp-gold-deep);">privado</em>,<br/>velocidad de fintech.
+          </h2>
+        </div>
+        <p class="mp-text-mute" data-mp-reveal data-mp-reveal-delay="200" style="font-size: 16px; max-width: 460px;">
+          Cuatro razones por las que cientos de panameños eligen MaxiPrest cuando buscan un préstamo personal serio sin perder tiempo en filas ni papeleo interminable.
+        </p>
+      </div>
+
+      <div class="benefits-grid">
+        <article class="mp-card mp-card-hover benefit" data-mp-reveal>
+          <div class="benefit-num">01</div>
+          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="24" cy="24" r="20"/><path d="M24 12v12l8 4"/></svg>
+          <h3>Aprobación rápida</h3>
+          <p>Te respondemos en menos de 24 horas hábiles con una decisión clara, sin rodeos ni promesas vagas.</p>
+        </article>
+        <article class="mp-card mp-card-hover benefit" data-mp-reveal data-mp-reveal-delay="100">
+          <div class="benefit-num">02</div>
+          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 22h32M8 30h32"/><rect x="6" y="14" width="36" height="24" rx="3"/></svg>
+          <h3>Montos altos</h3>
+          <p>Desde B/. 1,000 hasta B/. 100,000. Te ofrecemos lo que tu perfil financiero permita, no menos.</p>
+        </article>
+        <article class="mp-card mp-card-hover benefit" data-mp-reveal data-mp-reveal-delay="200">
+          <div class="benefit-num">03</div>
+          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 6L10 14v10c0 9 6 16 14 18 8-2 14-9 14-18V14L24 6z"/><path d="M18 24l4 4 8-8"/></svg>
+          <h3>Sin garantía hipotecaria</h3>
+          <p>No te pedimos poner tu casa ni tu carro. Bastan tus documentos laborales y tu cédula.</p>
+        </article>
+        <article class="mp-card mp-card-hover benefit" data-mp-reveal data-mp-reveal-delay="300">
+          <div class="benefit-num">04</div>
+          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="18" cy="20" r="6"/><path d="M6 40c0-6 6-10 12-10s12 4 12 10"/><circle cx="34" cy="16" r="4"/><path d="M30 30c4-1 12 1 12 8"/></svg>
+          <h3>Atención humana</h3>
+          <p>Hablas con asesores locales en Panamá. Sin chatbots evasivos, sin redirecciones eternas.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps">
+    <div class="mp-container">
+      <span class="mp-eyebrow" data-mp-reveal>Cómo funciona</span>
+      <h2 class="steps-h2" data-mp-reveal data-mp-reveal-delay="100">
+        Tres pasos. Cero <em>fricción</em>.
+      </h2>
+
+      <div class="step" data-mp-reveal>
+        <div class="step-num">01</div>
+        <div class="step-title">Llenas el formulario</div>
+        <div class="step-desc">Completa tus datos personales, laborales y adjunta cédula, carta de trabajo y ficha talonaria. Te toma 5 minutos.</div>
+      </div>
+      <div class="step" data-mp-reveal data-mp-reveal-delay="100">
+        <div class="step-num">02</div>
+        <div class="step-title">Evaluamos tu solicitud</div>
+        <div class="step-desc">Nuestro equipo revisa tu perfil y te contacta por WhatsApp para confirmar detalles. Decisión en menos de 24 horas.</div>
+      </div>
+      <div class="step" data-mp-reveal data-mp-reveal-delay="200">
+        <div class="step-num">03</div>
+        <div class="step-title">Recibes el desembolso</div>
+        <div class="step-desc">Firmas el contrato y recibes el dinero directamente en tu cuenta bancaria panameña. Sin filas, sin esperas.</div>
+      </div>
+
+      <div style="margin-top: 48px;">
+        <a class="mp-btn mp-btn-gold-solid" href="/aplica" data-mp-reveal>
+          Comenzar ahora
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mp-section" style="background: var(--mp-bg-soft);">
+    <div class="mp-container">
+      <span class="mp-eyebrow" data-mp-reveal>Testimonios</span>
+      <h2 class="mp-display" data-mp-reveal data-mp-reveal-delay="100" style="font-size: clamp(36px, 5vw, 60px); margin: 24px 0 64px; max-width: 760px;">
+        Historias de panameños que <em style="font-style: italic; color: var(--mp-gold-deep);">avanzaron</em>.
+      </h2>
+
+      <div class="testimonial-card" data-mp-reveal>
+        <p class="testimonial-quote">
+          Necesitaba B/. 30,000 para expandir mi taller en San Miguelito. MaxiPrest me aprobó en 19 horas, sin pedirme poner mi local como garantía. La diferencia fue real.
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JR</div>
+          <div>
+            <div class="testimonial-name">Jorge Ramírez</div>
+            <div class="testimonial-role">Propietario, Taller Mecánico — Ciudad de Panamá</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <span class="mp-eyebrow" data-mp-reveal>Listos para ayudarte</span>
+    <h2 data-mp-reveal data-mp-reveal-delay="100">
+      Aplicar toma<br/><em>cinco minutos</em>.
+    </h2>
+    <p data-mp-reveal data-mp-reveal-delay="200">Completa el formulario, adjunta tus documentos y nosotros nos encargamos del resto.</p>
+    <div data-mp-reveal data-mp-reveal-delay="300">
+      <a class="mp-btn mp-btn-gold-solid" href="/aplica" style="padding: 22px 40px; font-size: 15px;">
+        Aplicar ahora
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <div id="mp-footer"></div>
+
+  <script src="/shared/nav-footer.js"></script>
+  <script>
+    // Number counters
+    (function() {
+      const counters = document.querySelectorAll('[data-counter]');
+      if (!counters.length) return;
+      const animate = (el) => {
+        const target = parseFloat(el.dataset.counter);
+        const dur = 1600;
+        const start = performance.now();
+        const step = (now) => {
+          const p = Math.min((now - start) / dur, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const val = Math.floor(target * eased);
+          el.textContent = val.toLocaleString('es-PA');
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = target.toLocaleString('es-PA');
+        };
+        requestAnimationFrame(step);
+      };
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { animate(e.target); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.4 });
+      counters.forEach(c => io.observe(c));
+    })();
+
+    // Parallax hero cards
+    (function() {
+      const visual = document.getElementById('heroVisual');
+      const money = document.getElementById('heroCardMoney');
+      const approval = document.getElementById('heroCardApproval');
+      if (!visual) return;
+      visual.addEventListener('mousemove', (e) => {
+        const r = visual.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        money.style.transform = `rotate(-3deg) translate(${x * -18}px, ${y * -12}px)`;
+        approval.style.transform = `rotate(2deg) translate(${x * 12}px, ${y * 8}px)`;
+      });
+      visual.addEventListener('mouseleave', () => {
+        money.style.transform = '';
+        approval.style.transform = '';
+      });
+    })();
+  </script>
+</body>
+</html>
