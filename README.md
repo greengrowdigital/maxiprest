@@ -1,6 +1,8 @@
-# MaxiPrest — Sitio web (demo)
+# MaxiPrest — Sitio web
 
 Sitio web profesional multi-página para **MaxiPrest** (Panamá), empresa de préstamos personales hasta B/. 100,000.
+
+**Producción**: https://maxiprest.vercel.app
 
 ## Stack
 - HTML estático puro · Tailwind CDN · Vanilla JS

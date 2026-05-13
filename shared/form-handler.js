@@ -263,7 +263,7 @@
 
     const data = new FormData(form);
     data.append('submittedAt', new Date().toISOString());
-    data.append('source', 'maxiprest-demo');
+    data.append('source', 'maxiprest');
 
     showOverlay('loading');
 
