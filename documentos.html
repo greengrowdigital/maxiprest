@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="/shared/theme.css?v=4" rel="stylesheet" />
+  <link href="/shared/theme.css?v=5" rel="stylesheet" />
   <style>
     body { background: var(--mp-bg-soft); }
     .page-shell {
@@ -408,7 +408,7 @@
   </div>
 
   <div id="mp-footer"></div>
-  <script src="/shared/nav-footer.js?v=4"></script>
+  <script src="/shared/nav-footer.js?v=5"></script>
   <script>
     // ===== Read token from URL =====
     const params = new URLSearchParams(window.location.search);
@@ -551,9 +551,29 @@
       function closeCam() { cam.classList.remove('is-active','is-review','has-error'); document.body.style.overflow=''; stopStream(); targetInputName=null; captureBlob=null; }
       function takePhoto() {
         if (!video.videoWidth) return;
-        const w = video.videoWidth, h = video.videoHeight;
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(video, 0, 0, w, h);
+        const vw = video.videoWidth, vh = video.videoHeight;
+        const stage = video.parentElement;
+        const stageRect = stage.getBoundingClientRect();
+        const sw = stageRect.width, sh = stageRect.height;
+        const frameBox = stage.querySelector('.mp-cam-frame-box');
+        const frameRect = frameBox.getBoundingClientRect();
+        const videoAspect = vw / vh, stageAspect = sw / sh;
+        let displayedW, displayedH, offsetX, offsetY;
+        if (videoAspect > stageAspect) {
+          displayedH = sh; displayedW = sh * videoAspect;
+          offsetX = (sw - displayedW) / 2; offsetY = 0;
+        } else {
+          displayedW = sw; displayedH = sw / videoAspect;
+          offsetX = 0; offsetY = (sh - displayedH) / 2;
+        }
+        const scaleX = vw / displayedW, scaleY = vh / displayedH;
+        const sourceX = Math.max(0, (frameRect.left - stageRect.left - offsetX) * scaleX);
+        const sourceY = Math.max(0, (frameRect.top - stageRect.top - offsetY) * scaleY);
+        const sourceW = Math.min(vw - sourceX, frameRect.width * scaleX);
+        const sourceH = Math.min(vh - sourceY, frameRect.height * scaleY);
+        canvas.width = Math.round(sourceW);
+        canvas.height = Math.round(sourceH);
+        canvas.getContext('2d').drawImage(video, sourceX, sourceY, sourceW, sourceH, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(blob => {
           if (!blob) return;
           captureBlob = blob; preview.src = URL.createObjectURL(blob);

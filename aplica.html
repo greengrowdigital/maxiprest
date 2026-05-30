@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="/shared/theme.css?v=4" rel="stylesheet" />
+  <link href="/shared/theme.css?v=5" rel="stylesheet" />
   <style>
     .form-hero {
       padding: calc(var(--mp-nav-h) + 64px) 24px 32px;
@@ -862,8 +862,8 @@
   </div>
 
   <div id="mp-footer"></div>
-  <script src="/shared/nav-footer.js?v=4"></script>
-  <script src="/shared/form-handler.js?v=4"></script>
+  <script src="/shared/nav-footer.js?v=5"></script>
+  <script src="/shared/form-handler.js?v=5"></script>
   <script>
     // Populate day & year selects
     (function() {
@@ -965,12 +965,50 @@
 
       function takePhoto() {
         if (!video.videoWidth) return;
-        const w = video.videoWidth;
-        const h = video.videoHeight;
-        canvas.width = w;
-        canvas.height = h;
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        const stage = video.parentElement;
+        const stageRect = stage.getBoundingClientRect();
+        const sw = stageRect.width;
+        const sh = stageRect.height;
+        const frameBox = stage.querySelector('.mp-cam-frame-box');
+        const frameRect = frameBox.getBoundingClientRect();
+
+        // Calcular cómo object-fit:cover escala el video dentro del stage
+        const videoAspect = vw / vh;
+        const stageAspect = sw / sh;
+        let displayedW, displayedH, offsetX, offsetY;
+        if (videoAspect > stageAspect) {
+          // video más ancho → escala por alto, lados recortados
+          displayedH = sh;
+          displayedW = sh * videoAspect;
+          offsetX = (sw - displayedW) / 2;
+          offsetY = 0;
+        } else {
+          // video más alto → escala por ancho, arriba/abajo recortados
+          displayedW = sw;
+          displayedH = sw / videoAspect;
+          offsetX = 0;
+          offsetY = (sh - displayedH) / 2;
+        }
+
+        const scaleX = vw / displayedW;
+        const scaleY = vh / displayedH;
+
+        const frameXInStage = frameRect.left - stageRect.left;
+        const frameYInStage = frameRect.top - stageRect.top;
+
+        const sourceX = Math.max(0, (frameXInStage - offsetX) * scaleX);
+        const sourceY = Math.max(0, (frameYInStage - offsetY) * scaleY);
+        const sourceW = Math.min(vw - sourceX, frameRect.width * scaleX);
+        const sourceH = Math.min(vh - sourceY, frameRect.height * scaleY);
+
+        // Resolución del archivo final = la zona recortada del video original
+        canvas.width = Math.round(sourceW);
+        canvas.height = Math.round(sourceH);
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, w, h);
+        ctx.drawImage(video, sourceX, sourceY, sourceW, sourceH, 0, 0, canvas.width, canvas.height);
+
         canvas.toBlob((blob) => {
           if (!blob) return;
           captureBlob = blob;
