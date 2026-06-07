@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="/shared/theme.css?v=5" rel="stylesheet" />
+  <link href="/shared/theme.css?v=6" rel="stylesheet" />
   <style>
     /* Hero */
     .hero {
@@ -191,10 +191,238 @@
       background:
         radial-gradient(ellipse 60% 50% at 50% 30%, var(--mp-gold-tint) 0%, transparent 60%),
         var(--mp-bg);
+      position: relative;
+      overflow: hidden;
     }
-    .final-cta h2 { font-family: var(--mp-font-display); font-size: clamp(40px, 6vw, 84px); line-height: 1.02; font-weight: 400; margin: 0 0 24px; letter-spacing: -0.025em; }
+    .final-cta h2 { font-family: var(--mp-font-display); font-size: clamp(40px, 6vw, 84px); line-height: 1.02; font-weight: 400; margin: 0 0 24px; letter-spacing: -0.025em; position: relative; z-index: 1; }
     .final-cta h2 em { color: var(--mp-gold-deep); font-style: italic; }
-    .final-cta p { color: var(--mp-ink-mute); font-size: 17px; max-width: 600px; margin: 0 auto 40px; }
+    .final-cta p { color: var(--mp-ink-mute); font-size: 17px; max-width: 600px; margin: 0 auto 40px; position: relative; z-index: 1; }
+    .final-orb {
+      position: absolute;
+      width: 480px; height: 480px;
+      border-radius: 50%;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--mp-gold-soft) 0%, transparent 70%);
+      filter: blur(40px);
+      opacity: .6;
+      animation: orb-float 12s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes orb-float {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    /* === Animated mesh gradient in hero === */
+    .hero-mesh {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.6;
+      background:
+        radial-gradient(circle at 20% 30%, var(--mp-gold-soft) 0%, transparent 35%),
+        radial-gradient(circle at 80% 70%, var(--mp-gold-tint) 0%, transparent 35%),
+        radial-gradient(circle at 60% 20%, rgba(255,215,150,0.3) 0%, transparent 30%);
+      filter: blur(30px);
+      animation: mesh-shift 18s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    @keyframes mesh-shift {
+      0% { transform: translate(0%, 0%) scale(1); }
+      100% { transform: translate(3%, -3%) scale(1.1); }
+    }
+    .hero-inner { position: relative; z-index: 1; }
+
+    /* === Hero scroll hint === */
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mp-ink-mute);
+      opacity: 0;
+      animation: scroll-hint-in 1.2s 1.4s var(--mp-ease) forwards;
+      z-index: 2;
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--mp-gold), transparent);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-scroll-line::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 12px;
+      background: var(--mp-gold-deep);
+      animation: scroll-line 2s ease-in-out infinite;
+    }
+    @keyframes scroll-line {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(400%); }
+    }
+    @keyframes scroll-hint-in {
+      to { opacity: 1; }
+    }
+    @media (max-width: 980px) {
+      .hero-scroll-hint { display: none; }
+    }
+
+    /* === Magnetic buttons === */
+    .mp-magnetic { transition: transform .15s var(--mp-ease) !important; }
+
+    /* === 3D tilt cards === */
+    .mp-tilt {
+      transition: transform .3s var(--mp-ease), box-shadow .3s var(--mp-ease) !important;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .mp-tilt > * { transform: translateZ(0); }
+    .mp-tilt:hover .benefit-icon {
+      transform: translateZ(20px) scale(1.1);
+      color: var(--mp-gold-deep);
+    }
+    .benefit-icon { transition: transform .4s var(--mp-ease), color .3s var(--mp-ease); }
+
+    /* === Comparison section === */
+    .compare-section {
+      background: linear-gradient(180deg, var(--mp-bg) 0%, var(--mp-bg-soft) 100%);
+    }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 56px;
+    }
+    .compare-col {
+      padding: 48px 36px;
+      border-radius: var(--mp-radius-lg);
+      border: 1px solid var(--mp-line);
+      background: var(--mp-bg);
+      position: relative;
+      overflow: hidden;
+      transition: transform .5s var(--mp-ease), box-shadow .5s var(--mp-ease);
+    }
+    .compare-col:hover { transform: translateY(-4px); }
+    .compare-bank {
+      background: var(--mp-bg);
+      color: var(--mp-ink-mute);
+    }
+    .compare-bank:hover { box-shadow: var(--mp-shadow-sm); }
+    .compare-mp {
+      background: var(--mp-ink);
+      color: var(--mp-bg);
+      border-color: var(--mp-ink);
+    }
+    .compare-mp:hover { box-shadow: var(--mp-glow-gold); }
+    .compare-glow {
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, var(--mp-gold-deep) 0%, transparent 40%);
+      opacity: .12;
+      animation: rotate-slow 22s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes rotate-slow { to { transform: rotate(360deg); } }
+    .compare-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--mp-line);
+      position: relative;
+      z-index: 1;
+    }
+    .compare-mp .compare-head { border-color: rgba(255,255,255,0.1); color: var(--mp-gold); }
+    .compare-label {
+      font-family: var(--mp-font-display);
+      font-size: 24px;
+      font-weight: 400;
+    }
+    .compare-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .compare-list li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 12px 0;
+      font-size: 14px;
+      line-height: 1.6;
+      border-bottom: 1px dashed var(--mp-line);
+    }
+    .compare-mp .compare-list li { border-color: rgba(255,255,255,0.08); }
+    .compare-list li:last-child { border-bottom: 0; }
+    .compare-list .x { color: var(--mp-error); font-weight: 700; flex-shrink: 0; }
+    .compare-list .check { color: var(--mp-gold); font-weight: 700; flex-shrink: 0; }
+    .compare-footer {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--mp-line);
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .compare-mp .compare-footer { border-color: rgba(255,255,255,0.1); }
+    .compare-time {
+      font-family: var(--mp-font-display);
+      font-size: 44px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+    .compare-mp .compare-time { color: var(--mp-gold); }
+    .compare-time-lbl {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--mp-ink-soft);
+    }
+    .compare-mp .compare-time-lbl { color: rgba(255,255,255,0.5); }
+    @media (max-width: 720px) {
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+
+    /* === Cursor follower (gold dot) === */
+    .mp-cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--mp-gold);
+      pointer-events: none;
+      z-index: 1000;
+      transform: translate(-50%, -50%);
+      transition: width .2s, height .2s, background .2s, opacity .25s;
+      opacity: 0;
+      mix-blend-mode: difference;
+      will-change: transform;
+    }
+    .mp-cursor.is-visible { opacity: 1; }
+    .mp-cursor.is-hover { width: 36px; height: 36px; background: var(--mp-gold-soft); }
+    @media (hover: none), (max-width: 900px) {
+      .mp-cursor { display: none; }
+    }
+
+    /* Marquee hover slowdown */
+    .marquee:hover .marquee-track { animation-play-state: paused; }
   </style>
 </head>
 <body>
@@ -203,22 +431,24 @@
 
   <section class="hero">
     <div class="mp-hero-grid-bg"></div>
+    <div class="hero-mesh" aria-hidden="true"></div>
     <div class="hero-inner">
       <div>
         <span class="mp-eyebrow" data-mp-reveal>Préstamos personales · Panamá</span>
         <h1 class="hero-h1" data-mp-reveal data-mp-reveal-delay="100">
-          Capital cuando<br/>lo <em>necesitas</em>.<br/>
-          Hasta <span class="mp-mono-amt">B/. 100,000</span>.
+          Tu <em>préstamo</em>,<br/>
+          cotizado en<br/>
+          <span class="mp-mono-amt">minutos</span>.
         </h1>
         <p class="hero-sub" data-mp-reveal data-mp-reveal-delay="200">
-          Préstamos personales para residentes en Panamá. Aprobación en menos de 24 horas, sin garantías hipotecarias, con atención humana de principio a fin.
+          Cotizamos y gestionamos tu préstamo personal de hasta B/. 100,000 más rápido y fácil que un banco. Sin filas, sin papeleo interminable, sin perder tu día.
         </p>
         <div class="hero-ctas" data-mp-reveal data-mp-reveal-delay="300">
-          <a class="mp-btn mp-btn-gold-solid" href="/aplica">
-            Aplicar ahora
+          <a class="mp-btn mp-btn-gold-solid mp-magnetic" href="/aplica">
+            Cotiza ahora
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
-          <a class="mp-btn mp-btn-ghost" href="/requisitos">Ver requisitos</a>
+          <a class="mp-btn mp-btn-ghost mp-magnetic" href="/requisitos">Ver requisitos</a>
         </div>
         <div class="hero-meta" data-mp-reveal data-mp-reveal-delay="400">
           <div class="hero-meta-item">
@@ -227,7 +457,7 @@
           </div>
           <div class="hero-meta-item">
             <div class="num"><span data-counter="24">0</span>h</div>
-            <div class="lbl">Aprobación promedio</div>
+            <div class="lbl">Cotización promedio</div>
           </div>
           <div class="hero-meta-item">
             <div class="num">B/.<span data-counter="100">0</span>K</div>
@@ -239,7 +469,7 @@
       <div class="hero-visual" data-mp-reveal data-mp-reveal-delay="200" id="heroVisual">
         <div class="hero-card-money" id="heroCardMoney">
           <div>
-            <div class="lbl">Tu préstamo aprobado</div>
+            <div class="lbl">Tu cotización lista</div>
             <div class="amt">B/. 25,000.00</div>
           </div>
           <div class="row">
@@ -250,26 +480,30 @@
         <div class="hero-card-approval" id="heroCardApproval">
           <span class="dot"></span>
           <div class="txt">
-            <strong>Aprobado en 18h</strong>
-            <span>Sin garante hipotecaria</span>
+            <strong>Cotizado en 18h</strong>
+            <span>Más rápido que un banco</span>
           </div>
         </div>
       </div>
+    </div>
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <span>Descubre</span>
+      <div class="hero-scroll-line"></div>
     </div>
   </section>
 
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span class="marquee-item">Residentes en Panamá</span>
+      <span class="marquee-item">Cotiza en minutos</span>
       <span class="marquee-item">Hasta B/. 100,000</span>
-      <span class="marquee-item">Sin garantía hipotecaria</span>
-      <span class="marquee-item">Aprobación en 24h</span>
-      <span class="marquee-item">Atención humana</span>
+      <span class="marquee-item">Más rápido que un banco</span>
+      <span class="marquee-item">Te gestionamos todo</span>
       <span class="marquee-item">Residentes en Panamá</span>
+      <span class="marquee-item">Cotiza en minutos</span>
       <span class="marquee-item">Hasta B/. 100,000</span>
-      <span class="marquee-item">Sin garantía hipotecaria</span>
-      <span class="marquee-item">Aprobación en 24h</span>
-      <span class="marquee-item">Atención humana</span>
+      <span class="marquee-item">Más rápido que un banco</span>
+      <span class="marquee-item">Te gestionamos todo</span>
+      <span class="marquee-item">Residentes en Panamá</span>
     </div>
   </div>
 
@@ -283,35 +517,91 @@
           </h2>
         </div>
         <p class="mp-text-mute" data-mp-reveal data-mp-reveal-delay="200" style="font-size: 16px; max-width: 460px;">
-          Cuatro razones por las que cientos de panameños eligen MaxiPrest cuando buscan un préstamo personal serio sin perder tiempo en filas ni papeleo interminable.
+          Cuatro razones por las que cientos de panameños eligen MaxiPrest para cotizar y gestionar su préstamo personal sin pasar por la fila del banco.
         </p>
       </div>
 
       <div class="benefits-grid">
-        <article class="mp-card mp-card-hover benefit" data-mp-reveal>
+        <article class="mp-card mp-card-hover benefit mp-tilt" data-mp-reveal>
           <div class="benefit-num">01</div>
           <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="24" cy="24" r="20"/><path d="M24 12v12l8 4"/></svg>
-          <h3>Aprobación rápida</h3>
-          <p>Te respondemos en menos de 24 horas hábiles con una decisión clara, sin rodeos ni promesas vagas.</p>
+          <h3>Cotización rápida</h3>
+          <p>Te cotizamos tu préstamo en menos de 24 horas hábiles con números claros, sin rodeos ni promesas vagas.</p>
         </article>
-        <article class="mp-card mp-card-hover benefit" data-mp-reveal data-mp-reveal-delay="100">
+        <article class="mp-card mp-card-hover benefit mp-tilt" data-mp-reveal data-mp-reveal-delay="100">
           <div class="benefit-num">02</div>
           <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 22h32M8 30h32"/><rect x="6" y="14" width="36" height="24" rx="3"/></svg>
           <h3>Montos altos</h3>
-          <p>Desde B/. 1,000 hasta B/. 100,000. Te ofrecemos lo que tu perfil financiero permita, no menos.</p>
+          <p>Desde B/. 1,000 hasta B/. 100,000. Te cotizamos según tu perfil financiero, sin techos arbitrarios.</p>
         </article>
-        <article class="mp-card mp-card-hover benefit" data-mp-reveal data-mp-reveal-delay="200">
+        <article class="mp-card mp-card-hover benefit mp-tilt" data-mp-reveal data-mp-reveal-delay="200">
           <div class="benefit-num">03</div>
-          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 6L10 14v10c0 9 6 16 14 18 8-2 14-9 14-18V14L24 6z"/><path d="M18 24l4 4 8-8"/></svg>
-          <h3>Sin garantía hipotecaria</h3>
-          <p>No te pedimos poner tu casa ni tu carro. Bastan tus documentos laborales y tu cédula.</p>
+          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 24l8 8 24-24"/><circle cx="24" cy="24" r="20"/></svg>
+          <h3>Más fácil que un banco</h3>
+          <p>Cero filas, cero formularios físicos, cero esperas. Todo el trámite desde tu celular en minutos.</p>
         </article>
-        <article class="mp-card mp-card-hover benefit" data-mp-reveal data-mp-reveal-delay="300">
+        <article class="mp-card mp-card-hover benefit mp-tilt" data-mp-reveal data-mp-reveal-delay="300">
           <div class="benefit-num">04</div>
-          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="18" cy="20" r="6"/><path d="M6 40c0-6 6-10 12-10s12 4 12 10"/><circle cx="34" cy="16" r="4"/><path d="M30 30c4-1 12 1 12 8"/></svg>
-          <h3>Atención humana</h3>
-          <p>Hablas con asesores locales en Panamá. Sin chatbots evasivos, sin redirecciones eternas.</p>
+          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 4L8 12v14c0 11 7 19 16 22 9-3 16-11 16-22V12L24 4z"/><path d="M16 24l6 6 12-12"/></svg>
+          <h3>Gestionamos todo</h3>
+          <p>Nosotros nos encargamos del trámite completo. Tú solo nos das tus datos y nosotros corremos por ti.</p>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparación Banco vs MaxiPrest -->
+  <section class="mp-section compare-section">
+    <div class="mp-container">
+      <span class="mp-eyebrow" data-mp-reveal>La diferencia</span>
+      <h2 class="mp-display" data-mp-reveal data-mp-reveal-delay="100" style="font-size: clamp(36px, 5vw, 64px); margin: 24px 0 56px; max-width: 800px;">
+        Un banco te hace <em style="font-style: italic; color: var(--mp-gold-deep);">esperar</em>.<br/>
+        MaxiPrest te hace <em style="font-style: italic; color: var(--mp-gold-deep);">avanzar</em>.
+      </h2>
+
+      <div class="compare-grid">
+        <div class="compare-col compare-bank" data-mp-reveal>
+          <div class="compare-head">
+            <span class="compare-label">Banco tradicional</span>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 9h2v3H9zM13 9h2v3h-2zM9 14h2v3H9zM13 14h2v3h-2z"/></svg>
+          </div>
+          <ul class="compare-list">
+            <li><span class="x">✕</span> Vas presencialmente a la sucursal</li>
+            <li><span class="x">✕</span> Filas de 1 a 3 horas</li>
+            <li><span class="x">✕</span> Múltiples formularios físicos</li>
+            <li><span class="x">✕</span> Respuesta en 5 a 15 días</li>
+            <li><span class="x">✕</span> Reuniones con ejecutivo</li>
+            <li><span class="x">✕</span> Cambios de horario laboral</li>
+          </ul>
+          <div class="compare-footer">
+            <span class="compare-time">7+ días</span>
+            <span class="compare-time-lbl">tiempo total</span>
+          </div>
+        </div>
+
+        <div class="compare-col compare-mp" data-mp-reveal data-mp-reveal-delay="150">
+          <div class="compare-glow" aria-hidden="true"></div>
+          <div class="compare-head">
+            <span class="compare-label">MaxiPrest</span>
+            <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+              <rect x="1" y="1" width="38" height="38" rx="9" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M11 28V12L20 22L29 12V28" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="20" cy="32" r="1.6" fill="currentColor"/>
+            </svg>
+          </div>
+          <ul class="compare-list">
+            <li><span class="check">✓</span> Cotizas desde tu celular</li>
+            <li><span class="check">✓</span> Cero filas, cero esperas</li>
+            <li><span class="check">✓</span> Formulario web en 5 minutos</li>
+            <li><span class="check">✓</span> Cotización en menos de 24h</li>
+            <li><span class="check">✓</span> WhatsApp con tu gestor asignado</li>
+            <li><span class="check">✓</span> Sin moverte de donde estás</li>
+          </ul>
+          <div class="compare-footer">
+            <span class="compare-time">&lt; 24h</span>
+            <span class="compare-time-lbl">tiempo total</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -326,21 +616,21 @@
       <div class="step" data-mp-reveal>
         <div class="step-num">01</div>
         <div class="step-title">Llenas el formulario</div>
-        <div class="step-desc">Completa tus datos personales, laborales y adjunta cédula, carta de trabajo y ficha talonaria. Te toma 5 minutos.</div>
+        <div class="step-desc">Completa tus datos personales, laborales y adjunta cédula, carta de trabajo y ficha talonaria. Te toma 5 minutos desde tu celular.</div>
       </div>
       <div class="step" data-mp-reveal data-mp-reveal-delay="100">
         <div class="step-num">02</div>
-        <div class="step-title">Evaluamos tu solicitud</div>
-        <div class="step-desc">Nuestro equipo revisa tu perfil y te contacta por WhatsApp para confirmar detalles. Decisión en menos de 24 horas.</div>
+        <div class="step-title">Te cotizamos</div>
+        <div class="step-desc">Nuestro equipo revisa tu perfil y te contacta por WhatsApp con tu cotización en menos de 24 horas hábiles. Tú decides si avanzas.</div>
       </div>
       <div class="step" data-mp-reveal data-mp-reveal-delay="200">
         <div class="step-num">03</div>
         <div class="step-title">Recibes el desembolso</div>
-        <div class="step-desc">Firmas el contrato y recibes el dinero directamente en tu cuenta bancaria panameña. Sin filas, sin esperas.</div>
+        <div class="step-desc">Nosotros gestionamos el trámite completo. Firmas y recibes el dinero directo en tu cuenta. Tú nunca pisas un banco.</div>
       </div>
 
       <div style="margin-top: 48px;">
-        <a class="mp-btn mp-btn-gold-solid" href="/aplica" data-mp-reveal>
+        <a class="mp-btn mp-btn-gold-solid mp-magnetic" href="/aplica" data-mp-reveal>
           Comenzar ahora
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
@@ -357,7 +647,7 @@
 
       <div class="testimonial-card" data-mp-reveal>
         <p class="testimonial-quote">
-          Necesitaba B/. 30,000 para expandir mi taller en San Miguelito. MaxiPrest me aprobó en 19 horas, sin pedirme poner mi local como garantía. La diferencia fue real.
+          Necesitaba B/. 30,000 para expandir mi taller en San Miguelito. MaxiPrest me cotizó en 19 horas y gestionó todo el préstamo por mí. No pisé un banco ni una vez. La diferencia fue real.
         </p>
         <div class="testimonial-author">
           <div class="testimonial-avatar">JR</div>
@@ -371,14 +661,15 @@
   </section>
 
   <section class="final-cta">
+    <div class="final-orb" aria-hidden="true"></div>
     <span class="mp-eyebrow" data-mp-reveal>Listos para ayudarte</span>
     <h2 data-mp-reveal data-mp-reveal-delay="100">
-      Aplicar toma<br/><em>cinco minutos</em>.
+      Cotiza tu préstamo<br/>en <em>cinco minutos</em>.
     </h2>
-    <p data-mp-reveal data-mp-reveal-delay="200">Completa el formulario, adjunta tus documentos y nosotros nos encargamos del resto.</p>
+    <p data-mp-reveal data-mp-reveal-delay="200">Completa el formulario, adjunta tus documentos y nosotros nos encargamos de todo el trámite por ti.</p>
     <div data-mp-reveal data-mp-reveal-delay="300">
-      <a class="mp-btn mp-btn-gold-solid" href="/aplica" style="padding: 22px 40px; font-size: 15px;">
-        Aplicar ahora
+      <a class="mp-btn mp-btn-gold-solid mp-magnetic" href="/aplica" style="padding: 22px 40px; font-size: 15px;">
+        Cotiza ahora
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
     </div>
@@ -386,7 +677,7 @@
 
   <div id="mp-footer"></div>
 
-  <script src="/shared/nav-footer.js?v=5"></script>
+  <script src="/shared/nav-footer.js?v=6"></script>
   <script>
     // Number counters
     (function() {
@@ -430,6 +721,79 @@
       visual.addEventListener('mouseleave', () => {
         money.style.transform = '';
         approval.style.transform = '';
+      });
+    })();
+
+    // === Magnetic buttons ===
+    (function() {
+      const btns = document.querySelectorAll('.mp-magnetic');
+      btns.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const r = btn.getBoundingClientRect();
+          const x = e.clientX - r.left - r.width / 2;
+          const y = e.clientY - r.top - r.height / 2;
+          btn.style.transform = `translate(${x * 0.18}px, ${y * 0.28}px)`;
+        });
+        btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+      });
+    })();
+
+    // === 3D tilt cards ===
+    (function() {
+      const cards = document.querySelectorAll('.mp-tilt');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const cx = e.clientX - r.left;
+          const cy = e.clientY - r.top;
+          const rotY = ((cx / r.width) - 0.5) * 10;
+          const rotX = ((cy / r.height) - 0.5) * -10;
+          card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-6px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    })();
+
+    // === Custom cursor follower ===
+    (function() {
+      if (window.matchMedia('(hover: none), (max-width: 900px)').matches) return;
+      const dot = document.createElement('div');
+      dot.className = 'mp-cursor';
+      document.body.appendChild(dot);
+      let tx = 0, ty = 0, cx = 0, cy = 0;
+      window.addEventListener('mousemove', (e) => {
+        tx = e.clientX; ty = e.clientY;
+        dot.classList.add('is-visible');
+      });
+      window.addEventListener('mouseleave', () => dot.classList.remove('is-visible'));
+      function tick() {
+        cx += (tx - cx) * 0.18;
+        cy += (ty - cy) * 0.18;
+        dot.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      const hoverables = document.querySelectorAll('a, button, .mp-card-hover, .mp-tilt, .compare-col');
+      hoverables.forEach(el => {
+        el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
+        el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
+      });
+    })();
+
+    // === Smooth scroll for anchor links ===
+    (function() {
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          const href = a.getAttribute('href');
+          if (!href || href === '#') return;
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
       });
     })();
   </script>
