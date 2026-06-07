@@ -3,151 +3,668 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>MaxiPrest — Préstamos personales hasta B/. 100,000 en Panamá</title>
-  <meta name="description" content="Préstamos personales hasta B/. 100,000 para residentes en Panamá. Aprobación en 24 horas, sin garantía hipotecaria, atención humana." />
-  <meta property="og:title" content="MaxiPrest — Préstamos personales hasta B/. 100,000" />
-  <meta property="og:description" content="Aprobación en 24h. Préstamos hasta B/. 100,000 para residentes en Panamá." />
+  <title>MaxiPrest — Cotiza tu préstamo en minutos. Sin filas, sin banco.</title>
+  <meta name="description" content="Cotizamos y gestionamos tu préstamo personal de hasta B/. 100,000 en Panamá. Más rápido y fácil que un banco. Sin filas, sin papeleo." />
+  <meta property="og:title" content="MaxiPrest — Cotiza tu préstamo en minutos." />
+  <meta property="og:description" content="Cotización en menos de 24h. Más rápido y fácil que un banco." />
   <meta property="og:type" content="website" />
   <link rel="icon" href="/public/logo-mark.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="/shared/theme.css?v=6" rel="stylesheet" />
+  <link href="/shared/theme.css?v=7" rel="stylesheet" />
   <style>
-    /* Hero */
+    /* ==== Scroll Progress Bar ==== */
+    .mp-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--mp-gold), var(--mp-gold-deep));
+      z-index: 99;
+      box-shadow: 0 0 12px rgba(201,169,97,0.5);
+      transition: width 0.1s linear;
+    }
+
+    /* ==== Noise overlay (premium texture) ==== */
+    .mp-noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+    }
+
+    /* ==== HERO ==== */
     .hero {
       position: relative;
-      padding: calc(var(--mp-nav-h) + 80px) 24px 120px;
+      padding: calc(var(--mp-nav-h) + 96px) 24px 80px;
       overflow: hidden;
       background: var(--mp-bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
     }
     .hero-inner {
       max-width: 1280px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1.15fr .85fr;
       gap: 64px;
       align-items: center;
       position: relative;
+      z-index: 3;
+      width: 100%;
     }
+
+    /* Animated mesh */
+    .hero-mesh {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.55;
+      background:
+        radial-gradient(circle at 18% 28%, var(--mp-gold-soft) 0%, transparent 38%),
+        radial-gradient(circle at 82% 68%, var(--mp-gold-tint) 0%, transparent 38%),
+        radial-gradient(circle at 60% 18%, rgba(255,215,150,0.4) 0%, transparent 32%);
+      filter: blur(38px);
+      animation: mesh-shift 22s ease-in-out infinite alternate;
+      z-index: 1;
+    }
+    @keyframes mesh-shift {
+      0% { transform: translate(0%, 0%) scale(1); }
+      50% { transform: translate(2%, -2%) scale(1.08); }
+      100% { transform: translate(-2%, 2%) scale(1.1); }
+    }
+
+    /* Floating gold blobs */
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(50px);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .hero-blob.b1 { width: 320px; height: 320px; top: 12%; left: -120px; background: radial-gradient(circle, var(--mp-gold-soft), transparent 60%); animation: blob-float 14s ease-in-out infinite; }
+    .hero-blob.b2 { width: 240px; height: 240px; bottom: 8%; right: -80px; background: radial-gradient(circle, var(--mp-gold-tint), transparent 60%); animation: blob-float 16s ease-in-out infinite 2s; }
+    @keyframes blob-float {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(40px,-30px) scale(1.15); }
+    }
+
+    /* Trust badge floating top */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 8px 8px 14px;
+      border-radius: var(--mp-radius-pill);
+      background: var(--mp-bg);
+      border: 1px solid var(--mp-line);
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: var(--mp-shadow-sm);
+      animation: badge-pulse 4s ease-in-out infinite;
+      margin-bottom: 24px;
+    }
+    .hero-badge .stars { display: inline-flex; gap: 2px; color: var(--mp-gold); }
+    .hero-badge .stars svg { width: 12px; height: 12px; fill: currentColor; }
+    .hero-badge .num { font-family: var(--mp-font-mono); color: var(--mp-ink); }
+    .hero-badge .lbl { color: var(--mp-ink-mute); font-weight: 500; }
+    .hero-badge .pulse-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--mp-gold), var(--mp-gold-deep));
+      position: relative;
+    }
+    .hero-badge .pulse-dot::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      border: 1px solid var(--mp-gold);
+      opacity: .5;
+      animation: badge-ring 2s ease-out infinite;
+    }
+    @keyframes badge-pulse { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+    @keyframes badge-ring { 0% { transform: scale(.8); opacity: .6; } 100% { transform: scale(2.4); opacity: 0; } }
+
+    /* Hero H1 */
     .hero-h1 {
       font-family: var(--mp-font-display);
-      font-size: clamp(48px, 7vw, 104px);
+      font-size: clamp(54px, 8vw, 120px);
       font-weight: 400;
-      line-height: 0.98;
-      letter-spacing: -0.025em;
-      margin: 28px 0 24px;
+      line-height: 0.96;
+      letter-spacing: -0.03em;
+      margin: 0 0 28px;
       color: var(--mp-ink);
     }
-    .hero-h1 em { font-style: italic; color: var(--mp-gold-deep); font-weight: 300; }
-    .hero-h1 .mp-mono-amt { font-family: var(--mp-font-mono); font-weight: 600; font-size: 0.78em; letter-spacing: -0.03em; }
-    .hero-sub { font-size: clamp(16px, 1.4vw, 19px); color: var(--mp-ink-mute); max-width: 520px; line-height: 1.6; margin-bottom: 36px; }
-    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
-    .hero-meta { display: flex; gap: 32px; margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--mp-line); flex-wrap: wrap; }
-    .hero-meta-item .num { font-family: var(--mp-font-display); font-size: 36px; color: var(--mp-ink); letter-spacing: -0.02em; }
-    .hero-meta-item .lbl { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mp-ink-mute); }
+    .hero-h1 em {
+      font-style: italic;
+      color: var(--mp-gold-deep);
+      font-weight: 300;
+      position: relative;
+      display: inline-block;
+    }
+    .hero-h1 em::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 0.08em;
+      height: 2px;
+      background: var(--mp-gold);
+      transform-origin: left;
+      animation: underline-grow 1.2s 1.5s var(--mp-ease-out) forwards;
+      transform: scaleX(0);
+    }
+    @keyframes underline-grow { to { transform: scaleX(1); } }
+    .hero-h1 .mp-mono-amt {
+      font-family: var(--mp-font-mono);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      position: relative;
+    }
+    .hero-h1 .ticker {
+      display: inline-block;
+      color: var(--mp-gold-deep);
+      background: var(--mp-gold-tint);
+      padding: 0 0.18em;
+      border-radius: 6px;
+      min-width: 3.2ch;
+      text-align: center;
+    }
 
+    .hero-sub {
+      font-size: clamp(16px, 1.4vw, 19px);
+      color: var(--mp-ink-mute);
+      max-width: 540px;
+      line-height: 1.65;
+      margin-bottom: 40px;
+    }
+    .hero-sub strong { color: var(--mp-ink); font-weight: 600; }
+
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; }
+
+    /* Gradient border button */
+    .mp-btn-shine {
+      position: relative;
+      isolation: isolate;
+    }
+    .mp-btn-shine::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: var(--mp-radius-pill);
+      background: conic-gradient(from var(--shine-angle, 0deg), transparent 0deg, var(--mp-gold) 60deg, transparent 120deg, transparent 360deg);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity .3s var(--mp-ease);
+      animation: shine-rotate 4s linear infinite;
+    }
+    .mp-btn-shine:hover::after { opacity: 1; }
+    @property --shine-angle {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
+    }
+    @keyframes shine-rotate { to { --shine-angle: 360deg; } }
+
+    /* Hero trust bar */
+    .hero-trust {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .hero-trust-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 24px 0;
+      border-top: 1px solid var(--mp-line);
+      border-bottom: 1px solid var(--mp-line);
+    }
+    .hero-trust-item .num {
+      font-family: var(--mp-font-display);
+      font-size: clamp(28px, 3.5vw, 42px);
+      color: var(--mp-ink);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+    }
+    .hero-trust-item .num em { font-style: normal; color: var(--mp-gold-deep); font-family: var(--mp-font-mono); font-size: 0.6em; margin-left: 2px; font-weight: 600; }
+    .hero-trust-item .lbl { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mp-ink-mute); margin-top: 6px; font-weight: 500; }
+
+    .hero-companies {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mp-ink-soft);
+    }
+    .hero-companies-line { flex: 1; height: 1px; background: var(--mp-line); }
+
+    /* === HERO VISUAL — Premium 3D card with shimmer === */
     .hero-visual {
       position: relative;
       aspect-ratio: 4 / 5;
-      border-radius: var(--mp-radius-lg);
-      overflow: hidden;
-      background: linear-gradient(160deg, var(--mp-gold-tint) 0%, var(--mp-bg-soft) 60%, var(--mp-bg) 100%);
-      transform: translateZ(0);
+      perspective: 1400px;
     }
-    .hero-visual::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(60% 50% at 70% 20%, var(--mp-gold-soft) 0%, transparent 60%),
-        radial-gradient(40% 40% at 20% 90%, var(--mp-gold-tint) 0%, transparent 60%);
-      mix-blend-mode: multiply;
+    .hero-stack {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transform: rotateY(-8deg) rotateX(4deg);
+      transition: transform .4s var(--mp-ease);
     }
-    .hero-card-money {
+    .hero-credit-card {
       position: absolute;
-      top: 12%;
-      right: -8%;
-      width: 78%;
+      top: 8%;
+      right: -6%;
+      width: 88%;
       aspect-ratio: 1.6/1;
-      background: var(--mp-ink);
+      background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%);
       border-radius: 22px;
-      padding: 26px;
+      padding: 28px;
       color: var(--mp-bg);
-      box-shadow: var(--mp-shadow-lg);
+      box-shadow:
+        0 30px 80px -20px rgba(10,10,10,0.5),
+        0 0 0 1px rgba(255,255,255,0.05) inset;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transform: rotate(-3deg);
+      transform: translateZ(60px) rotate(-4deg);
+      overflow: hidden;
     }
-    .hero-card-money::after {
+    .hero-credit-card::before {
       content: '';
       position: absolute;
-      top: 22px; right: 22px;
-      width: 56px; height: 36px;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 30%, rgba(201,169,97,0.18) 50%, transparent 70%);
+      animation: card-shimmer 4s ease-in-out infinite;
+    }
+    @keyframes card-shimmer {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+    .hero-credit-card .chip {
+      width: 48px; height: 36px;
       background: linear-gradient(135deg, var(--mp-gold) 0%, var(--mp-gold-deep) 100%);
       border-radius: 6px;
-      opacity: .9;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+      position: relative;
     }
-    .hero-card-money .amt { font-family: var(--mp-font-mono); font-size: 32px; color: var(--mp-gold); font-weight: 600; }
-    .hero-card-money .lbl { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; opacity: .6; }
-    .hero-card-money .row { display: flex; justify-content: space-between; align-items: flex-end; }
-    .hero-card-money .holder { font-size: 14px; font-weight: 500; }
-
-    .hero-card-approval {
+    .hero-credit-card .chip::after {
+      content: '';
       position: absolute;
-      bottom: 12%;
-      left: -6%;
+      inset: 8px;
+      border-radius: 2px;
+      background:
+        linear-gradient(90deg, transparent 47%, rgba(10,10,10,0.4) 47%, rgba(10,10,10,0.4) 53%, transparent 53%),
+        linear-gradient(0deg, transparent 47%, rgba(10,10,10,0.4) 47%, rgba(10,10,10,0.4) 53%, transparent 53%);
+    }
+    .hero-credit-card .head { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
+    .hero-credit-card .lbl { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mp-gold); margin-bottom: 8px; opacity: 0.8; }
+    .hero-credit-card .brand { font-family: var(--mp-font-display); font-size: 16px; color: var(--mp-bg); }
+    .hero-credit-card .brand span { color: var(--mp-gold); }
+    .hero-credit-card .amt {
+      font-family: var(--mp-font-mono);
+      font-size: clamp(28px, 3vw, 36px);
+      color: var(--mp-gold);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      position: relative; z-index: 1;
+    }
+    .hero-credit-card .bottom { display: flex; justify-content: space-between; align-items: flex-end; position: relative; z-index: 1; }
+    .hero-credit-card .holder { font-size: 13px; font-weight: 500; letter-spacing: 0.05em; }
+    .hero-credit-card .meta { font-family: var(--mp-font-mono); font-size: 10px; opacity: 0.5; }
+
+    /* Floating notification card */
+    .hero-notif {
+      position: absolute;
+      bottom: 14%;
+      left: -8%;
       background: var(--mp-bg);
       border: 1px solid var(--mp-line);
-      border-radius: 18px;
-      padding: 18px 22px;
+      border-radius: 16px;
+      padding: 14px 18px;
       box-shadow: var(--mp-shadow-md);
       display: flex;
       align-items: center;
-      gap: 14px;
-      transform: rotate(2deg);
+      gap: 12px;
+      transform: translateZ(80px) rotate(3deg);
+      animation: notif-float 5s ease-in-out infinite;
+      min-width: 240px;
     }
-    .hero-card-approval .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--mp-success); position: relative; }
-    .hero-card-approval .dot::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--mp-success); opacity: .35; animation: mp-pulse 2s var(--mp-ease) infinite; }
-    @keyframes mp-pulse { 0% { transform: scale(.9); opacity: .5; } 70% { transform: scale(1.6); opacity: 0; } 100% { opacity: 0; } }
-    .hero-card-approval .txt { font-size: 13px; }
-    .hero-card-approval .txt strong { display:block; color: var(--mp-ink); font-weight: 600; }
-    .hero-card-approval .txt span { color: var(--mp-ink-mute); }
+    .hero-notif .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--mp-success); position: relative; flex-shrink: 0; }
+    .hero-notif .dot::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--mp-success); opacity: .35; animation: notif-pulse 2s var(--mp-ease) infinite; }
+    @keyframes notif-pulse { 0% { transform: scale(.9); opacity: .5; } 70% { transform: scale(1.8); opacity: 0; } 100% { opacity: 0; } }
+    @keyframes notif-float { 0%, 100% { transform: translateZ(80px) rotate(3deg) translateY(0); } 50% { transform: translateZ(80px) rotate(3deg) translateY(-8px); } }
+    .hero-notif .txt { font-size: 13px; line-height: 1.4; }
+    .hero-notif .txt strong { display: block; color: var(--mp-ink); font-weight: 600; font-size: 13px; }
+    .hero-notif .txt span { color: var(--mp-ink-mute); font-size: 11px; }
+
+    /* Speed indicator floating top right */
+    .hero-speed {
+      position: absolute;
+      top: -4%;
+      right: -4%;
+      background: var(--mp-ink);
+      color: var(--mp-bg);
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 12px;
+      box-shadow: var(--mp-shadow-md);
+      transform: translateZ(40px) rotate(6deg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: speed-tilt 6s ease-in-out infinite;
+    }
+    @keyframes speed-tilt { 0%, 100% { transform: translateZ(40px) rotate(6deg); } 50% { transform: translateZ(40px) rotate(3deg); } }
+    .hero-speed strong { color: var(--mp-gold); font-family: var(--mp-font-display); font-size: 22px; line-height: 1; }
+    .hero-speed span { color: rgba(255,255,255,0.6); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; display: block; margin-top: 2px; }
 
     @media (max-width: 980px) {
       .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-      .hero-visual { max-width: 480px; margin: 0 auto; }
+      .hero-visual { max-width: 440px; margin: 0 auto; }
     }
 
-    /* Marquee */
+    /* === SECTION dividers (decorative SVG between sections) === */
+    .mp-divider-wave {
+      width: 100%;
+      height: 60px;
+      display: block;
+      color: var(--mp-bg-soft);
+    }
+
+    /* === MARQUEE === */
     .marquee {
-      padding: 32px 0;
+      padding: 24px 0;
       border-top: 1px solid var(--mp-line);
       border-bottom: 1px solid var(--mp-line);
       overflow: hidden;
       background: var(--mp-bg-soft);
+      position: relative;
     }
+    .marquee::before, .marquee::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .marquee::before { left: 0; background: linear-gradient(90deg, var(--mp-bg-soft), transparent); }
+    .marquee::after { right: 0; background: linear-gradient(-90deg, var(--mp-bg-soft), transparent); }
     .marquee-track {
       display: flex;
-      gap: 64px;
-      animation: scroll-x 40s linear infinite;
+      gap: 56px;
+      animation: scroll-x 30s linear infinite;
       width: max-content;
     }
-    .marquee-item { font-family: var(--mp-font-display); font-size: 28px; color: var(--mp-ink-mute); display: inline-flex; align-items: center; gap: 64px; }
-    .marquee-item::after { content: '✦'; color: var(--mp-gold); font-size: 16px; }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    .marquee-item { font-family: var(--mp-font-display); font-size: 24px; color: var(--mp-ink-mute); display: inline-flex; align-items: center; gap: 56px; white-space: nowrap; }
+    .marquee-item::after { content: '✦'; color: var(--mp-gold); font-size: 14px; }
     @keyframes scroll-x { to { transform: translateX(-50%); } }
 
-    /* Benefits */
-    .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 56px; }
-    .benefit { padding: 36px 28px; }
-    .benefit-num { font-family: var(--mp-font-mono); color: var(--mp-gold-deep); font-size: 14px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
-    .benefit-num::after { content: ''; flex: 1; height: 1px; background: var(--mp-line); }
-    .benefit-icon { width: 48px; height: 48px; color: var(--mp-gold-deep); margin-bottom: 24px; }
-    .benefit h3 { font-family: var(--mp-font-display); font-size: 26px; font-weight: 400; margin: 0 0 12px; letter-spacing: -0.01em; }
-    .benefit p { margin: 0; color: var(--mp-ink-mute); font-size: 15px; line-height: 1.65; }
+    /* === STATS BANNER === */
+    .stats-banner {
+      padding: 80px 24px;
+      background: var(--mp-ink);
+      color: var(--mp-bg);
+      overflow: hidden;
+      position: relative;
+    }
+    .stats-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(201,169,97,0.15), transparent),
+        radial-gradient(ellipse 40% 30% at 80% 100%, rgba(201,169,97,0.08), transparent);
+      pointer-events: none;
+    }
+    .stats-banner-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 48px;
+      position: relative;
+      z-index: 1;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: var(--mp-font-display);
+      font-size: clamp(48px, 6vw, 76px);
+      font-weight: 400;
+      color: var(--mp-gold);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .stat-num em { font-style: normal; color: var(--mp-bg); font-family: var(--mp-font-mono); font-size: 0.5em; }
+    .stat-lbl { color: rgba(255,255,255,0.6); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; }
+    @media (max-width: 720px) {
+      .stats-banner-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
 
-    /* Steps */
+    /* === BENTO GRID === */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: minmax(220px, auto);
+      gap: 16px;
+      margin-top: 56px;
+    }
+    .bento-card {
+      position: relative;
+      border: 1px solid var(--mp-line);
+      border-radius: var(--mp-radius-lg);
+      padding: 32px;
+      overflow: hidden;
+      background: var(--mp-bg);
+      transition: transform .4s var(--mp-ease), box-shadow .4s var(--mp-ease), border-color .4s var(--mp-ease);
+      isolation: isolate;
+    }
+    .bento-card:hover { transform: translateY(-4px); box-shadow: var(--mp-shadow-md); border-color: var(--mp-line-gold); }
+    .bento-card.size-2 { grid-column: span 2; }
+    .bento-card.size-3 { grid-column: span 3; }
+    .bento-card.size-4 { grid-column: span 4; }
+    .bento-card.size-6 { grid-column: span 6; }
+    .bento-card.tall { grid-row: span 2; }
+    .bento-card.dark { background: var(--mp-ink); color: var(--mp-bg); border-color: var(--mp-ink); }
+    .bento-card.dark:hover { box-shadow: var(--mp-glow-gold); border-color: var(--mp-gold); }
+
+    .bento-num {
+      font-family: var(--mp-font-mono);
+      color: var(--mp-gold-deep);
+      font-size: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bento-num::after { content: ''; flex: 1; height: 1px; background: var(--mp-line); }
+    .bento-card.dark .bento-num { color: var(--mp-gold); }
+    .bento-card.dark .bento-num::after { background: rgba(255,255,255,0.1); }
+    .bento-title {
+      font-family: var(--mp-font-display);
+      font-size: clamp(22px, 2vw, 28px);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      margin: 0 0 12px;
+    }
+    .bento-desc { color: var(--mp-ink-mute); font-size: 14px; line-height: 1.65; margin: 0; }
+    .bento-card.dark .bento-desc { color: rgba(255,255,255,0.65); }
+
+    /* Big bento — ring counter */
+    .bento-big {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .bento-ring {
+      position: absolute;
+      right: -60px;
+      bottom: -60px;
+      width: 320px;
+      height: 320px;
+      pointer-events: none;
+    }
+    .bento-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .bento-ring .ring-bg { fill: none; stroke: rgba(201,169,97,0.15); stroke-width: 8; }
+    .bento-ring .ring-fg {
+      fill: none;
+      stroke: var(--mp-gold);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 900;
+      stroke-dashoffset: 900;
+      animation: ring-draw 2.5s 0.4s var(--mp-ease-out) forwards;
+    }
+    @keyframes ring-draw { to { stroke-dashoffset: 180; } }
+    .bento-big-num {
+      font-family: var(--mp-font-display);
+      font-size: clamp(72px, 9vw, 130px);
+      color: var(--mp-gold);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-weight: 400;
+      position: relative;
+      z-index: 1;
+    }
+    .bento-big-num em { font-style: normal; font-family: var(--mp-font-mono); font-size: 0.4em; color: var(--mp-bg); opacity: 0.7; }
+
+    /* Bento dark — bar chart */
+    .bento-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 80px;
+      margin-top: 20px;
+    }
+    .bento-chart .bar {
+      flex: 1;
+      background: linear-gradient(180deg, var(--mp-gold) 0%, var(--mp-gold-deep) 100%);
+      border-radius: 4px 4px 0 0;
+      animation: bar-grow 1s var(--mp-ease-out) forwards;
+      transform-origin: bottom;
+      transform: scaleY(0);
+    }
+    .bento-chart .bar:nth-child(1) { animation-delay: 0.1s; height: 30%; }
+    .bento-chart .bar:nth-child(2) { animation-delay: 0.18s; height: 55%; }
+    .bento-chart .bar:nth-child(3) { animation-delay: 0.26s; height: 40%; }
+    .bento-chart .bar:nth-child(4) { animation-delay: 0.34s; height: 75%; }
+    .bento-chart .bar:nth-child(5) { animation-delay: 0.42s; height: 60%; }
+    .bento-chart .bar:nth-child(6) { animation-delay: 0.5s; height: 90%; }
+    .bento-chart .bar:nth-child(7) { animation-delay: 0.58s; height: 100%; box-shadow: 0 0 16px rgba(201,169,97,0.5); }
+    @keyframes bar-grow { to { transform: scaleY(1); } }
+
+    /* Bento icon */
+    .bento-icon-wrap {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: var(--mp-gold-tint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--mp-gold-deep);
+      margin-bottom: 20px;
+      transition: transform .35s var(--mp-ease);
+    }
+    .bento-card:hover .bento-icon-wrap { transform: rotate(-8deg) scale(1.05); }
+    .bento-card.dark .bento-icon-wrap { background: rgba(201,169,97,0.15); color: var(--mp-gold); }
+
+    @media (max-width: 980px) {
+      .bento { grid-template-columns: repeat(2, 1fr); }
+      .bento-card.size-2, .bento-card.size-3, .bento-card.size-4, .bento-card.size-6 { grid-column: span 2; }
+      .bento-card.tall { grid-row: span 1; }
+    }
+    @media (max-width: 540px) {
+      .bento { grid-template-columns: 1fr; }
+      .bento-card.size-2, .bento-card.size-3, .bento-card.size-4, .bento-card.size-6 { grid-column: span 1; }
+    }
+
+    /* === TIMELINE === */
+    .timeline {
+      position: relative;
+      max-width: 880px;
+      margin: 64px auto 0;
+      padding-left: 80px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 28px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: rgba(255,255,255,0.08);
+    }
+    .timeline-progress {
+      position: absolute;
+      left: 28px;
+      top: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--mp-gold), var(--mp-gold-deep));
+      height: 0%;
+      transition: height 0.2s linear;
+      box-shadow: 0 0 12px rgba(201,169,97,0.5);
+    }
+    .timeline-item {
+      position: relative;
+      padding: 32px 0 32px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -60px;
+      top: 40px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--mp-ink);
+      border: 2px solid rgba(255,255,255,0.15);
+      transition: all .4s var(--mp-ease);
+    }
+    .timeline-item.is-active::before {
+      background: var(--mp-gold);
+      border-color: var(--mp-gold);
+      box-shadow: 0 0 0 8px rgba(201,169,97,0.2), 0 0 16px rgba(201,169,97,0.6);
+      transform: scale(1.2);
+    }
+    .timeline-num {
+      font-family: var(--mp-font-mono);
+      font-size: 12px;
+      color: var(--mp-gold);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .timeline-title {
+      font-family: var(--mp-font-display);
+      color: var(--mp-bg);
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      line-height: 1.1;
+      margin: 0 0 12px;
+    }
+    .timeline-desc {
+      color: rgba(255,255,255,0.65);
+      font-size: 15px;
+      line-height: 1.7;
+      margin: 0;
+      max-width: 540px;
+    }
+
     .steps {
       background: var(--mp-ink);
       color: var(--mp-bg);
@@ -155,146 +672,28 @@
       overflow: hidden;
       position: relative;
     }
-    .steps .mp-eyebrow { color: var(--mp-gold); }
-    .steps-h2 { font-family: var(--mp-font-display); color: var(--mp-bg); font-size: clamp(40px, 5vw, 64px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; margin: 24px 0 64px; max-width: 800px; }
-    .steps-h2 em { color: var(--mp-gold); font-style: italic; }
-    .step { display: grid; grid-template-columns: 100px 1fr 1fr; gap: 48px; padding: 48px 0; border-top: 1px solid rgba(255,255,255,0.08); align-items: center; }
-    .step:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .step-num { font-family: var(--mp-font-display); font-size: 64px; color: var(--mp-gold); font-weight: 300; }
-    .step-title { font-family: var(--mp-font-display); font-size: 32px; font-weight: 400; letter-spacing: -0.015em; }
-    .step-desc { color: rgba(255,255,255,0.6); font-size: 15px; line-height: 1.7; }
-    @media (max-width: 760px) {
-      .step { grid-template-columns: 1fr; gap: 12px; padding: 32px 0; }
-    }
-
-    /* Testimonials */
-    .testimonial-card { padding: 48px; background: var(--mp-bg-soft); border-radius: var(--mp-radius-lg); border: 1px solid var(--mp-line); position: relative; }
-    .testimonial-card::before {
-      content: '"';
-      position: absolute;
-      top: 12px; left: 32px;
-      font-family: var(--mp-font-display);
-      font-size: 120px;
-      color: var(--mp-gold-soft);
-      line-height: 1;
-    }
-    .testimonial-quote { font-family: var(--mp-font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.4; font-weight: 400; color: var(--mp-ink); position: relative; max-width: 720px; }
-    .testimonial-author { display: flex; align-items: center; gap: 16px; margin-top: 32px; }
-    .testimonial-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--mp-gold-soft), var(--mp-gold-deep)); display: flex; align-items: center; justify-content: center; font-family: var(--mp-font-display); font-size: 18px; color: var(--mp-ink); font-weight: 500; }
-    .testimonial-name { font-weight: 600; font-size: 14px; color: var(--mp-ink); }
-    .testimonial-role { font-size: 12px; color: var(--mp-ink-mute); }
-
-    /* Final CTA */
-    .final-cta {
-      padding: clamp(80px, 12vw, 140px) 24px;
-      text-align: center;
-      background:
-        radial-gradient(ellipse 60% 50% at 50% 30%, var(--mp-gold-tint) 0%, transparent 60%),
-        var(--mp-bg);
-      position: relative;
-      overflow: hidden;
-    }
-    .final-cta h2 { font-family: var(--mp-font-display); font-size: clamp(40px, 6vw, 84px); line-height: 1.02; font-weight: 400; margin: 0 0 24px; letter-spacing: -0.025em; position: relative; z-index: 1; }
-    .final-cta h2 em { color: var(--mp-gold-deep); font-style: italic; }
-    .final-cta p { color: var(--mp-ink-mute); font-size: 17px; max-width: 600px; margin: 0 auto 40px; position: relative; z-index: 1; }
-    .final-orb {
-      position: absolute;
-      width: 480px; height: 480px;
-      border-radius: 50%;
-      left: 50%; top: 50%;
-      transform: translate(-50%, -50%);
-      background: radial-gradient(circle, var(--mp-gold-soft) 0%, transparent 70%);
-      filter: blur(40px);
-      opacity: .6;
-      animation: orb-float 12s ease-in-out infinite;
-      pointer-events: none;
-    }
-    @keyframes orb-float {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.15); }
-    }
-
-    /* === Animated mesh gradient in hero === */
-    .hero-mesh {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.6;
-      background:
-        radial-gradient(circle at 20% 30%, var(--mp-gold-soft) 0%, transparent 35%),
-        radial-gradient(circle at 80% 70%, var(--mp-gold-tint) 0%, transparent 35%),
-        radial-gradient(circle at 60% 20%, rgba(255,215,150,0.3) 0%, transparent 30%);
-      filter: blur(30px);
-      animation: mesh-shift 18s ease-in-out infinite alternate;
-      z-index: 0;
-    }
-    @keyframes mesh-shift {
-      0% { transform: translate(0%, 0%) scale(1); }
-      100% { transform: translate(3%, -3%) scale(1.1); }
-    }
-    .hero-inner { position: relative; z-index: 1; }
-
-    /* === Hero scroll hint === */
-    .hero-scroll-hint {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--mp-ink-mute);
-      opacity: 0;
-      animation: scroll-hint-in 1.2s 1.4s var(--mp-ease) forwards;
-      z-index: 2;
-    }
-    .hero-scroll-line {
-      width: 1px;
-      height: 48px;
-      background: linear-gradient(to bottom, var(--mp-gold), transparent);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-scroll-line::after {
+    .steps::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 12px;
-      background: var(--mp-gold-deep);
-      animation: scroll-line 2s ease-in-out infinite;
+      top: 0; right: 0;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(201,169,97,0.12), transparent 70%);
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
     }
-    @keyframes scroll-line {
-      0% { transform: translateY(-100%); }
-      100% { transform: translateY(400%); }
-    }
-    @keyframes scroll-hint-in {
-      to { opacity: 1; }
-    }
-    @media (max-width: 980px) {
-      .hero-scroll-hint { display: none; }
+    .steps .mp-eyebrow { color: var(--mp-gold); }
+    .steps .mp-eyebrow::before { background: var(--mp-gold); }
+    .steps-h2 { font-family: var(--mp-font-display); color: var(--mp-bg); font-size: clamp(40px, 5vw, 64px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; margin: 24px 0 0; max-width: 800px; }
+    .steps-h2 em { color: var(--mp-gold); font-style: italic; }
+
+    @media (max-width: 720px) {
+      .timeline { padding-left: 56px; }
+      .timeline::before, .timeline-progress { left: 16px; }
+      .timeline-item::before { left: -48px; }
     }
 
-    /* === Magnetic buttons === */
-    .mp-magnetic { transition: transform .15s var(--mp-ease) !important; }
-
-    /* === 3D tilt cards === */
-    .mp-tilt {
-      transition: transform .3s var(--mp-ease), box-shadow .3s var(--mp-ease) !important;
-      transform-style: preserve-3d;
-      will-change: transform;
-    }
-    .mp-tilt > * { transform: translateZ(0); }
-    .mp-tilt:hover .benefit-icon {
-      transform: translateZ(20px) scale(1.1);
-      color: var(--mp-gold-deep);
-    }
-    .benefit-icon { transition: transform .4s var(--mp-ease), color .3s var(--mp-ease); }
-
-    /* === Comparison section === */
+    /* === COMPARISON — Bar race === */
     .compare-section {
       background: linear-gradient(180deg, var(--mp-bg) 0%, var(--mp-bg-soft) 100%);
     }
@@ -314,10 +713,7 @@
       transition: transform .5s var(--mp-ease), box-shadow .5s var(--mp-ease);
     }
     .compare-col:hover { transform: translateY(-4px); }
-    .compare-bank {
-      background: var(--mp-bg);
-      color: var(--mp-ink-mute);
-    }
+    .compare-bank { color: var(--mp-ink-mute); }
     .compare-bank:hover { box-shadow: var(--mp-shadow-sm); }
     .compare-mp {
       background: var(--mp-ink);
@@ -339,25 +735,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       padding-bottom: 24px;
       border-bottom: 1px solid var(--mp-line);
       position: relative;
       z-index: 1;
     }
     .compare-mp .compare-head { border-color: rgba(255,255,255,0.1); color: var(--mp-gold); }
-    .compare-label {
-      font-family: var(--mp-font-display);
-      font-size: 24px;
-      font-weight: 400;
-    }
-    .compare-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      position: relative;
-      z-index: 1;
-    }
+    .compare-label { font-family: var(--mp-font-display); font-size: 24px; font-weight: 400; }
+    .compare-list { list-style: none; padding: 0; margin: 0; position: relative; z-index: 1; }
     .compare-list li {
       display: flex;
       gap: 14px;
@@ -371,40 +757,213 @@
     .compare-list li:last-child { border-bottom: 0; }
     .compare-list .x { color: var(--mp-error); font-weight: 700; flex-shrink: 0; }
     .compare-list .check { color: var(--mp-gold); font-weight: 700; flex-shrink: 0; }
-    .compare-footer {
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid var(--mp-line);
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-    }
-    .compare-mp .compare-footer { border-color: rgba(255,255,255,0.1); }
-    .compare-time {
+
+    /* Time bar visualization */
+    .compare-bar-wrap { margin-top: 24px; }
+    .compare-bar-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; font-size: 11px; color: var(--mp-ink-soft); letter-spacing: 0.14em; text-transform: uppercase; }
+    .compare-mp .compare-bar-label { color: rgba(255,255,255,0.4); }
+    .compare-bar-label strong {
       font-family: var(--mp-font-display);
-      font-size: 44px;
+      font-size: 32px;
       font-weight: 400;
+      color: var(--mp-ink);
       letter-spacing: -0.02em;
     }
-    .compare-mp .compare-time { color: var(--mp-gold); }
-    .compare-time-lbl {
-      font-size: 12px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--mp-ink-soft);
+    .compare-mp .compare-bar-label strong { color: var(--mp-gold); }
+    .compare-bar {
+      height: 10px;
+      background: var(--mp-bg-tint);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
     }
-    .compare-mp .compare-time-lbl { color: rgba(255,255,255,0.5); }
+    .compare-mp .compare-bar { background: rgba(255,255,255,0.06); }
+    .compare-bar-fill {
+      height: 100%;
+      border-radius: 8px;
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 1.4s var(--mp-ease-out);
+    }
+    .compare-bar.is-visible .compare-bar-fill { transform: scaleX(var(--fill, 1)); }
+    .compare-bank .compare-bar-fill { background: linear-gradient(90deg, var(--mp-ink-mute), var(--mp-ink)); }
+    .compare-mp .compare-bar-fill { background: linear-gradient(90deg, var(--mp-gold), var(--mp-gold-deep)); box-shadow: 0 0 12px rgba(201,169,97,0.5); }
+
     @media (max-width: 720px) {
       .compare-grid { grid-template-columns: 1fr; }
     }
 
-    /* === Cursor follower (gold dot) === */
+    /* === TESTIMONIALS — Horizontal scroll === */
+    .testimonials {
+      padding: clamp(80px, 12vw, 140px) 0;
+      background: var(--mp-bg-soft);
+      overflow: hidden;
+    }
+    .testimonials-head {
+      max-width: 1280px;
+      margin: 0 auto 48px;
+      padding: 0 24px;
+    }
+    .testimonials-track {
+      display: flex;
+      gap: 24px;
+      padding: 0 24px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .testimonials-track::-webkit-scrollbar { display: none; }
+    .testimonial-card-h {
+      flex: 0 0 clamp(320px, 38vw, 520px);
+      scroll-snap-align: start;
+      padding: 40px;
+      background: var(--mp-bg);
+      border: 1px solid var(--mp-line);
+      border-radius: var(--mp-radius-lg);
+      position: relative;
+      transition: transform .4s var(--mp-ease), border-color .4s var(--mp-ease);
+    }
+    .testimonial-card-h:hover { transform: translateY(-4px); border-color: var(--mp-line-gold); }
+    .testimonial-card-h::before {
+      content: '"';
+      position: absolute;
+      top: 12px; left: 32px;
+      font-family: var(--mp-font-display);
+      font-size: 120px;
+      color: var(--mp-gold-soft);
+      line-height: 1;
+    }
+    .testimonial-stars { display: flex; gap: 4px; color: var(--mp-gold); margin-bottom: 16px; }
+    .testimonial-stars svg { width: 16px; height: 16px; fill: currentColor; }
+    .testimonial-quote-h {
+      font-family: var(--mp-font-display);
+      font-size: clamp(18px, 1.8vw, 22px);
+      line-height: 1.5;
+      font-weight: 400;
+      color: var(--mp-ink);
+      position: relative;
+      margin: 0 0 28px;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 14px; }
+    .testimonial-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--mp-gold-soft), var(--mp-gold-deep));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mp-font-display); font-size: 16px; color: var(--mp-ink); font-weight: 500;
+    }
+    .testimonial-name { font-weight: 600; font-size: 13px; color: var(--mp-ink); }
+    .testimonial-role { font-size: 11px; color: var(--mp-ink-mute); }
+    .testimonials-controls {
+      max-width: 1280px;
+      margin: 32px auto 0;
+      padding: 0 24px;
+      display: flex;
+      gap: 12px;
+    }
+    .testimonials-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--mp-bg);
+      border: 1px solid var(--mp-line);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .25s var(--mp-ease);
+      color: var(--mp-ink);
+    }
+    .testimonials-btn:hover { background: var(--mp-ink); color: var(--mp-gold); border-color: var(--mp-ink); }
+
+    /* === FAQ === */
+    .faq-section { max-width: 880px; margin: 0 auto; padding: clamp(60px, 10vw, 120px) 24px; }
+    .faq-item { border-top: 1px solid var(--mp-line); }
+    .faq-item:last-child { border-bottom: 1px solid var(--mp-line); }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: 0;
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      cursor: pointer;
+      font-family: var(--mp-font-display);
+      font-size: clamp(18px, 2vw, 22px);
+      font-weight: 400;
+      text-align: left;
+      color: var(--mp-ink);
+      transition: color .25s var(--mp-ease);
+    }
+    .faq-q:hover { color: var(--mp-gold-deep); }
+    .faq-q svg { flex-shrink: 0; transition: transform .35s var(--mp-ease); color: var(--mp-gold-deep); }
+    .faq-item.is-open .faq-q svg { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .45s var(--mp-ease);
+      color: var(--mp-ink-mute);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+    .faq-a > div { padding: 0 0 24px; max-width: 720px; }
+
+    /* === FINAL CTA === */
+    .final-cta {
+      padding: clamp(100px, 14vw, 180px) 24px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 30%, var(--mp-gold-tint) 0%, transparent 60%),
+        var(--mp-bg);
+      position: relative;
+      overflow: hidden;
+    }
+    .final-orb {
+      position: absolute;
+      width: 560px; height: 560px;
+      border-radius: 50%;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--mp-gold-soft) 0%, transparent 70%);
+      filter: blur(50px);
+      opacity: .55;
+      animation: orb-float 14s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes orb-float {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.18); }
+    }
+    .final-cta h2 {
+      font-family: var(--mp-font-display);
+      font-size: clamp(44px, 7.5vw, 110px);
+      line-height: 0.98;
+      font-weight: 400;
+      margin: 0 0 28px;
+      letter-spacing: -0.03em;
+      position: relative; z-index: 1;
+    }
+    .final-cta h2 em { color: var(--mp-gold-deep); font-style: italic; }
+    .final-cta p { color: var(--mp-ink-mute); font-size: 18px; max-width: 600px; margin: 0 auto 40px; position: relative; z-index: 1; }
+    .final-cta-meta {
+      margin-top: 32px;
+      display: inline-flex;
+      gap: 32px;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mp-ink-soft);
+      position: relative; z-index: 1;
+    }
+    .final-cta-meta span { display: inline-flex; align-items: center; gap: 6px; }
+    .final-cta-meta svg { width: 14px; height: 14px; color: var(--mp-gold); }
+
+    /* === Custom cursor === */
     .mp-cursor {
       position: fixed;
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: var(--mp-gold);
       pointer-events: none;
@@ -416,82 +975,118 @@
       will-change: transform;
     }
     .mp-cursor.is-visible { opacity: 1; }
-    .mp-cursor.is-hover { width: 36px; height: 36px; background: var(--mp-gold-soft); }
+    .mp-cursor.is-hover { width: 44px; height: 44px; background: var(--mp-gold-soft); }
     @media (hover: none), (max-width: 900px) {
       .mp-cursor { display: none; }
     }
 
-    /* Marquee hover slowdown */
-    .marquee:hover .marquee-track { animation-play-state: paused; }
+    /* === Section eyebrow with line === */
+    .mp-section { padding: clamp(80px, 12vw, 140px) 24px; position: relative; }
+
+    /* Magnetic buttons */
+    .mp-magnetic { transition: transform .15s var(--mp-ease) !important; }
   </style>
 </head>
 <body>
 
+  <div class="mp-progress" id="mpProgress"></div>
+  <div class="mp-noise" aria-hidden="true"></div>
   <div id="mp-nav"></div>
 
+  <!-- ============ HERO ============ -->
   <section class="hero">
     <div class="mp-hero-grid-bg"></div>
     <div class="hero-mesh" aria-hidden="true"></div>
+    <div class="hero-blob b1" aria-hidden="true"></div>
+    <div class="hero-blob b2" aria-hidden="true"></div>
+
     <div class="hero-inner">
       <div>
-        <span class="mp-eyebrow" data-mp-reveal>Préstamos personales · Panamá</span>
+        <div class="hero-badge" data-mp-reveal>
+          <span class="pulse-dot"></span>
+          <span class="stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          </span>
+          <span class="num">4.9</span>
+          <span class="lbl">· +5,000 panameños cotizados</span>
+        </div>
+
         <h1 class="hero-h1" data-mp-reveal data-mp-reveal-delay="100">
           Tu <em>préstamo</em>,<br/>
           cotizado en<br/>
-          <span class="mp-mono-amt">minutos</span>.
+          <span class="mp-mono-amt"><span class="ticker" id="heroTicker">5</span> min</span>.
         </h1>
         <p class="hero-sub" data-mp-reveal data-mp-reveal-delay="200">
-          Cotizamos y gestionamos tu préstamo personal de hasta B/. 100,000 más rápido y fácil que un banco. Sin filas, sin papeleo interminable, sin perder tu día.
+          <strong>Cotizamos y gestionamos tu préstamo personal</strong> de hasta B/. 100,000 más rápido y fácil que un banco. Sin filas, sin papeleo interminable, sin perder tu día.
         </p>
         <div class="hero-ctas" data-mp-reveal data-mp-reveal-delay="300">
-          <a class="mp-btn mp-btn-gold-solid mp-magnetic" href="/aplica">
+          <a class="mp-btn mp-btn-gold-solid mp-magnetic mp-btn-shine" href="/aplica">
             Cotiza ahora
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
           <a class="mp-btn mp-btn-ghost mp-magnetic" href="/requisitos">Ver requisitos</a>
         </div>
-        <div class="hero-meta" data-mp-reveal data-mp-reveal-delay="400">
-          <div class="hero-meta-item">
-            <div class="num"><span data-counter="5000">0</span>+</div>
-            <div class="lbl">Clientes activos</div>
+
+        <div class="hero-trust" data-mp-reveal data-mp-reveal-delay="400">
+          <div class="hero-trust-row">
+            <div class="hero-trust-item">
+              <div class="num"><span data-counter="5000">0</span><em>+</em></div>
+              <div class="lbl">Clientes activos</div>
+            </div>
+            <div class="hero-trust-item">
+              <div class="num"><span data-counter="24">0</span><em>h</em></div>
+              <div class="lbl">Cotización promedio</div>
+            </div>
+            <div class="hero-trust-item">
+              <div class="num"><em>B/.</em><span data-counter="100">0</span><em>K</em></div>
+              <div class="lbl">Monto máximo</div>
+            </div>
           </div>
-          <div class="hero-meta-item">
-            <div class="num"><span data-counter="24">0</span>h</div>
-            <div class="lbl">Cotización promedio</div>
-          </div>
-          <div class="hero-meta-item">
-            <div class="num">B/.<span data-counter="100">0</span>K</div>
-            <div class="lbl">Monto máximo</div>
+          <div class="hero-companies">
+            <span class="hero-companies-line"></span>
+            <span>Tu información, encriptada</span>
+            <span class="hero-companies-line"></span>
           </div>
         </div>
       </div>
 
       <div class="hero-visual" data-mp-reveal data-mp-reveal-delay="200" id="heroVisual">
-        <div class="hero-card-money" id="heroCardMoney">
-          <div>
-            <div class="lbl">Tu cotización lista</div>
+        <div class="hero-stack" id="heroStack">
+          <div class="hero-credit-card" id="heroCardMoney">
+            <div class="head">
+              <div>
+                <div class="lbl">Tu cotización lista</div>
+                <div class="brand">Maxi<span>Prest</span></div>
+              </div>
+              <div class="chip"></div>
+            </div>
             <div class="amt">B/. 25,000.00</div>
+            <div class="bottom">
+              <div class="holder">A. MORALES</div>
+              <div class="meta">PA · 24H</div>
+            </div>
           </div>
-          <div class="row">
-            <div class="holder">A. Morales</div>
-            <div style="font-family: var(--mp-font-mono); font-size: 11px; opacity: .5;">MAXIPREST · PA</div>
+          <div class="hero-notif" id="heroCardApproval">
+            <span class="dot"></span>
+            <div class="txt">
+              <strong>Cotizado en 18h</strong>
+              <span>Más rápido que un banco</span>
+            </div>
           </div>
-        </div>
-        <div class="hero-card-approval" id="heroCardApproval">
-          <span class="dot"></span>
-          <div class="txt">
-            <strong>Cotizado en 18h</strong>
-            <span>Más rápido que un banco</span>
+          <div class="hero-speed">
+            <strong>24h</strong>
+            <span>Cotización</span>
           </div>
         </div>
       </div>
     </div>
-    <div class="hero-scroll-hint" aria-hidden="true">
-      <span>Descubre</span>
-      <div class="hero-scroll-line"></div>
-    </div>
   </section>
 
+  <!-- ============ MARQUEE ============ -->
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
       <span class="marquee-item">Cotiza en minutos</span>
@@ -499,14 +1094,39 @@
       <span class="marquee-item">Más rápido que un banco</span>
       <span class="marquee-item">Te gestionamos todo</span>
       <span class="marquee-item">Residentes en Panamá</span>
+      <span class="marquee-item">Sin filas</span>
       <span class="marquee-item">Cotiza en minutos</span>
       <span class="marquee-item">Hasta B/. 100,000</span>
       <span class="marquee-item">Más rápido que un banco</span>
       <span class="marquee-item">Te gestionamos todo</span>
       <span class="marquee-item">Residentes en Panamá</span>
+      <span class="marquee-item">Sin filas</span>
     </div>
   </div>
 
+  <!-- ============ STATS BANNER ============ -->
+  <section class="stats-banner">
+    <div class="stats-banner-inner">
+      <div class="stat-item" data-mp-reveal>
+        <div class="stat-num"><span data-counter="5000">0</span><em>+</em></div>
+        <div class="stat-lbl">Clientes cotizados</div>
+      </div>
+      <div class="stat-item" data-mp-reveal data-mp-reveal-delay="100">
+        <div class="stat-num"><em>$</em><span data-counter="42">0</span><em>M</em></div>
+        <div class="stat-lbl">Capital gestionado</div>
+      </div>
+      <div class="stat-item" data-mp-reveal data-mp-reveal-delay="200">
+        <div class="stat-num"><span data-counter="98">0</span><em>%</em></div>
+        <div class="stat-lbl">Tasa de satisfacción</div>
+      </div>
+      <div class="stat-item" data-mp-reveal data-mp-reveal-delay="300">
+        <div class="stat-num"><em>&lt;</em><span data-counter="24">0</span><em>h</em></div>
+        <div class="stat-lbl">Tiempo de cotización</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BENTO BENEFITS ============ -->
   <section class="mp-section">
     <div class="mp-container">
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end;">
@@ -517,40 +1137,70 @@
           </h2>
         </div>
         <p class="mp-text-mute" data-mp-reveal data-mp-reveal-delay="200" style="font-size: 16px; max-width: 460px;">
-          Cuatro razones por las que cientos de panameños eligen MaxiPrest para cotizar y gestionar su préstamo personal sin pasar por la fila del banco.
+          Lo que un banco te hace en una semana, nosotros lo cotizamos y gestionamos en menos de 24 horas — sin que pises una sucursal.
         </p>
       </div>
 
-      <div class="benefits-grid">
-        <article class="mp-card mp-card-hover benefit mp-tilt" data-mp-reveal>
-          <div class="benefit-num">01</div>
-          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="24" cy="24" r="20"/><path d="M24 12v12l8 4"/></svg>
-          <h3>Cotización rápida</h3>
-          <p>Te cotizamos tu préstamo en menos de 24 horas hábiles con números claros, sin rodeos ni promesas vagas.</p>
+      <div class="bento">
+        <!-- Big card with ring counter -->
+        <article class="bento-card bento-big dark size-3 tall" data-mp-reveal>
+          <div>
+            <div class="bento-num">01</div>
+            <h3 class="bento-title" style="color: var(--mp-bg);">Cotización en menos de 24 horas.</h3>
+            <p class="bento-desc">Te cotizamos tu préstamo con números claros, sin rodeos. Sin esperas de semanas.</p>
+          </div>
+          <div class="bento-big-num" style="margin-top:32px;">24<em>h</em></div>
+          <div class="bento-ring">
+            <svg viewBox="0 0 320 320">
+              <circle class="ring-bg" cx="160" cy="160" r="140"/>
+              <circle class="ring-fg" cx="160" cy="160" r="140"/>
+            </svg>
+          </div>
         </article>
-        <article class="mp-card mp-card-hover benefit mp-tilt" data-mp-reveal data-mp-reveal-delay="100">
-          <div class="benefit-num">02</div>
-          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 22h32M8 30h32"/><rect x="6" y="14" width="36" height="24" rx="3"/></svg>
-          <h3>Montos altos</h3>
-          <p>Desde B/. 1,000 hasta B/. 100,000. Te cotizamos según tu perfil financiero, sin techos arbitrarios.</p>
+
+        <!-- Range card -->
+        <article class="bento-card size-3" data-mp-reveal data-mp-reveal-delay="100">
+          <div class="bento-num">02</div>
+          <div class="bento-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 22h32M8 30h32"/><rect x="6" y="14" width="36" height="24" rx="3"/></svg>
+          </div>
+          <h3 class="bento-title">Montos de B/. 1K a B/. 100K.</h3>
+          <p class="bento-desc">Te cotizamos según tu perfil financiero, sin techos arbitrarios.</p>
         </article>
-        <article class="mp-card mp-card-hover benefit mp-tilt" data-mp-reveal data-mp-reveal-delay="200">
-          <div class="benefit-num">03</div>
-          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 24l8 8 24-24"/><circle cx="24" cy="24" r="20"/></svg>
-          <h3>Más fácil que un banco</h3>
-          <p>Cero filas, cero formularios físicos, cero esperas. Todo el trámite desde tu celular en minutos.</p>
+
+        <!-- Comparison card with chart -->
+        <article class="bento-card size-3" data-mp-reveal data-mp-reveal-delay="150">
+          <div class="bento-num">03</div>
+          <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:8px;">
+            <h3 class="bento-title" style="margin:0;">Más rápido</h3>
+            <span style="color: var(--mp-ink-mute); font-size:14px;">que un banco</span>
+          </div>
+          <p class="bento-desc" style="margin-bottom:0;">Trámite 100% digital desde tu celular. Cero filas.</p>
+          <div class="bento-chart">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
         </article>
-        <article class="mp-card mp-card-hover benefit mp-tilt" data-mp-reveal data-mp-reveal-delay="300">
-          <div class="benefit-num">04</div>
-          <svg class="benefit-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 4L8 12v14c0 11 7 19 16 22 9-3 16-11 16-22V12L24 4z"/><path d="M16 24l6 6 12-12"/></svg>
-          <h3>Gestionamos todo</h3>
-          <p>Nosotros nos encargamos del trámite completo. Tú solo nos das tus datos y nosotros corremos por ti.</p>
+
+        <!-- Phone card -->
+        <article class="bento-card size-3" data-mp-reveal data-mp-reveal-delay="200">
+          <div class="bento-num">04</div>
+          <div class="bento-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+          </div>
+          <h3 class="bento-title">Todo desde tu celular.</h3>
+          <p class="bento-desc">Llenas, adjuntas, esperas y firmas. Sin mover un papel.</p>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- Comparación Banco vs MaxiPrest -->
+  <!-- ============ COMPARISON ============ -->
   <section class="mp-section compare-section">
     <div class="mp-container">
       <span class="mp-eyebrow" data-mp-reveal>La diferencia</span>
@@ -570,12 +1220,11 @@
             <li><span class="x">✕</span> Filas de 1 a 3 horas</li>
             <li><span class="x">✕</span> Múltiples formularios físicos</li>
             <li><span class="x">✕</span> Respuesta en 5 a 15 días</li>
-            <li><span class="x">✕</span> Reuniones con ejecutivo</li>
             <li><span class="x">✕</span> Cambios de horario laboral</li>
           </ul>
-          <div class="compare-footer">
-            <span class="compare-time">7+ días</span>
-            <span class="compare-time-lbl">tiempo total</span>
+          <div class="compare-bar-wrap">
+            <div class="compare-bar-label"><span>Tiempo total</span><strong>7+ días</strong></div>
+            <div class="compare-bar" data-bar-fill="1"><div class="compare-bar-fill"></div></div>
           </div>
         </div>
 
@@ -595,17 +1244,17 @@
             <li><span class="check">✓</span> Formulario web en 5 minutos</li>
             <li><span class="check">✓</span> Cotización en menos de 24h</li>
             <li><span class="check">✓</span> WhatsApp con tu gestor asignado</li>
-            <li><span class="check">✓</span> Sin moverte de donde estás</li>
           </ul>
-          <div class="compare-footer">
-            <span class="compare-time">&lt; 24h</span>
-            <span class="compare-time-lbl">tiempo total</span>
+          <div class="compare-bar-wrap">
+            <div class="compare-bar-label"><span>Tiempo total</span><strong>&lt; 24h</strong></div>
+            <div class="compare-bar" data-bar-fill="0.14"><div class="compare-bar-fill"></div></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ============ TIMELINE / STEPS ============ -->
   <section class="steps">
     <div class="mp-container">
       <span class="mp-eyebrow" data-mp-reveal>Cómo funciona</span>
@@ -613,24 +1262,27 @@
         Tres pasos. Cero <em>fricción</em>.
       </h2>
 
-      <div class="step" data-mp-reveal>
-        <div class="step-num">01</div>
-        <div class="step-title">Llenas el formulario</div>
-        <div class="step-desc">Completa tus datos personales, laborales y adjunta cédula, carta de trabajo y ficha talonaria. Te toma 5 minutos desde tu celular.</div>
-      </div>
-      <div class="step" data-mp-reveal data-mp-reveal-delay="100">
-        <div class="step-num">02</div>
-        <div class="step-title">Te cotizamos</div>
-        <div class="step-desc">Nuestro equipo revisa tu perfil y te contacta por WhatsApp con tu cotización en menos de 24 horas hábiles. Tú decides si avanzas.</div>
-      </div>
-      <div class="step" data-mp-reveal data-mp-reveal-delay="200">
-        <div class="step-num">03</div>
-        <div class="step-title">Recibes el desembolso</div>
-        <div class="step-desc">Nosotros gestionamos el trámite completo. Firmas y recibes el dinero directo en tu cuenta. Tú nunca pisas un banco.</div>
+      <div class="timeline" id="timeline">
+        <div class="timeline-progress" id="timelineProgress"></div>
+        <div class="timeline-item" data-mp-reveal>
+          <div class="timeline-num">Paso 01</div>
+          <h3 class="timeline-title">Llenas el formulario</h3>
+          <p class="timeline-desc">Completa tus datos personales, laborales y adjunta cédula, carta de trabajo y ficha talonaria. Te toma 5 minutos desde tu celular — fotos directo desde la app.</p>
+        </div>
+        <div class="timeline-item" data-mp-reveal data-mp-reveal-delay="100">
+          <div class="timeline-num">Paso 02</div>
+          <h3 class="timeline-title">Te cotizamos</h3>
+          <p class="timeline-desc">Nuestro equipo revisa tu perfil y te contacta por WhatsApp con tu cotización en menos de 24 horas hábiles. Tú decides si avanzas con la oferta.</p>
+        </div>
+        <div class="timeline-item" data-mp-reveal data-mp-reveal-delay="200">
+          <div class="timeline-num">Paso 03</div>
+          <h3 class="timeline-title">Recibes el desembolso</h3>
+          <p class="timeline-desc">Nosotros gestionamos el trámite completo. Firmas digitalmente y recibes el dinero directo en tu cuenta panameña. Tú nunca pisas un banco.</p>
+        </div>
       </div>
 
       <div style="margin-top: 48px;">
-        <a class="mp-btn mp-btn-gold-solid mp-magnetic" href="/aplica" data-mp-reveal>
+        <a class="mp-btn mp-btn-gold-solid mp-magnetic mp-btn-shine" href="/aplica" data-mp-reveal>
           Comenzar ahora
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
@@ -638,54 +1290,180 @@
     </div>
   </section>
 
-  <section class="mp-section" style="background: var(--mp-bg-soft);">
-    <div class="mp-container">
+  <!-- ============ TESTIMONIALS HORIZONTAL ============ -->
+  <section class="testimonials">
+    <div class="testimonials-head">
       <span class="mp-eyebrow" data-mp-reveal>Testimonios</span>
-      <h2 class="mp-display" data-mp-reveal data-mp-reveal-delay="100" style="font-size: clamp(36px, 5vw, 60px); margin: 24px 0 64px; max-width: 760px;">
+      <h2 class="mp-display" data-mp-reveal data-mp-reveal-delay="100" style="font-size: clamp(36px, 5vw, 60px); margin: 24px 0 0; max-width: 720px;">
         Historias de panameños que <em style="font-style: italic; color: var(--mp-gold-deep);">avanzaron</em>.
       </h2>
+    </div>
 
-      <div class="testimonial-card" data-mp-reveal>
-        <p class="testimonial-quote">
-          Necesitaba B/. 30,000 para expandir mi taller en San Miguelito. MaxiPrest me cotizó en 19 horas y gestionó todo el préstamo por mí. No pisé un banco ni una vez. La diferencia fue real.
-        </p>
+    <div class="testimonials-track" id="testimonialsTrack">
+      <article class="testimonial-card-h">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+        </div>
+        <p class="testimonial-quote-h">Necesitaba B/. 30,000 para expandir mi taller. MaxiPrest me cotizó en 19 horas y gestionó todo. No pisé un banco ni una vez.</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar">JR</div>
           <div>
             <div class="testimonial-name">Jorge Ramírez</div>
-            <div class="testimonial-role">Propietario, Taller Mecánico — Ciudad de Panamá</div>
+            <div class="testimonial-role">Taller Mecánico · Ciudad de Panamá</div>
           </div>
         </div>
+      </article>
+
+      <article class="testimonial-card-h">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+        </div>
+        <p class="testimonial-quote-h">Pedí B/. 12,000 para la remodelación de la casa. En 16 horas tenía cotización, en 2 días el dinero en la cuenta. Increíble.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MC</div>
+          <div>
+            <div class="testimonial-name">María Castillo</div>
+            <div class="testimonial-role">Enfermera · David, Chiriquí</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="testimonial-card-h">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+        </div>
+        <p class="testimonial-quote-h">El proceso fue todo por WhatsApp. Yo solo subí mis documentos desde el celular y al día siguiente tenía mi cotización lista.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">RP</div>
+          <div>
+            <div class="testimonial-name">Ricardo Pinzón</div>
+            <div class="testimonial-role">Contador · Colón</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="testimonial-card-h">
+        <div class="testimonial-stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg>
+        </div>
+        <p class="testimonial-quote-h">Necesitaba B/. 8,000 para consolidar deudas. Otros sitios me pedían avanzar dinero. MaxiPrest fue transparente desde el inicio.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">VR</div>
+          <div>
+            <div class="testimonial-name">Verónica Rodríguez</div>
+            <div class="testimonial-role">Maestra · Penonomé</div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="testimonials-controls">
+      <button class="testimonials-btn" id="testimonialsPrev" aria-label="Anterior">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="testimonials-btn" id="testimonialsNext" aria-label="Siguiente">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="mp-section" style="padding-top: 0;">
+    <div class="faq-section">
+      <span class="mp-eyebrow" data-mp-reveal>Preguntas frecuentes</span>
+      <h2 class="mp-display" data-mp-reveal data-mp-reveal-delay="100" style="font-size: clamp(36px, 5vw, 56px); margin: 24px 0 48px;">Las dudas que más nos <em style="font-style: italic; color: var(--mp-gold-deep);">preguntan</em>.</h2>
+
+      <div class="faq-item" data-mp-reveal>
+        <button class="faq-q" type="button">
+          <span>¿Cuánto tarda la cotización?</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-a"><div>Te cotizamos en menos de 24 horas hábiles. La mayoría de casos los respondemos el mismo día en que recibimos la solicitud completa con documentos.</div></div>
+      </div>
+      <div class="faq-item" data-mp-reveal>
+        <button class="faq-q" type="button">
+          <span>¿En qué se diferencian de un banco?</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-a"><div>Nosotros agilizamos y gestionamos todo el trámite desde tu celular. Lo que un banco te hace en una semana, nosotros lo cotizamos en menos de 24 horas — sin filas, sin reuniones presenciales, sin que pises una sucursal.</div></div>
+      </div>
+      <div class="faq-item" data-mp-reveal>
+        <button class="faq-q" type="button">
+          <span>¿Cuánto puedo cotizar?</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-a"><div>Desde B/. 1,000 hasta B/. 100,000, en plazos de 12 a 72 meses. La cotización final depende de tu perfil financiero.</div></div>
+      </div>
+      <div class="faq-item" data-mp-reveal>
+        <button class="faq-q" type="button">
+          <span>¿Cobran comisión por adelantado?</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <div class="faq-a"><div>Nunca. MaxiPrest no cobra nada por cotizar ni gestionar tu solicitud. Si alguien te pide dinero por adelantado en nuestro nombre, repórtalo de inmediato.</div></div>
       </div>
     </div>
   </section>
 
+  <!-- ============ FINAL CTA ============ -->
   <section class="final-cta">
     <div class="final-orb" aria-hidden="true"></div>
-    <span class="mp-eyebrow" data-mp-reveal>Listos para ayudarte</span>
+    <span class="mp-eyebrow" data-mp-reveal>Listos para cotizar</span>
     <h2 data-mp-reveal data-mp-reveal-delay="100">
       Cotiza tu préstamo<br/>en <em>cinco minutos</em>.
     </h2>
-    <p data-mp-reveal data-mp-reveal-delay="200">Completa el formulario, adjunta tus documentos y nosotros nos encargamos de todo el trámite por ti.</p>
+    <p data-mp-reveal data-mp-reveal-delay="200">Llena el formulario, adjunta tus documentos y nosotros nos encargamos del trámite completo. Tú solo esperas la respuesta por WhatsApp.</p>
     <div data-mp-reveal data-mp-reveal-delay="300">
-      <a class="mp-btn mp-btn-gold-solid mp-magnetic" href="/aplica" style="padding: 22px 40px; font-size: 15px;">
+      <a class="mp-btn mp-btn-gold-solid mp-magnetic mp-btn-shine" href="/aplica" style="padding: 22px 44px; font-size: 15px;">
         Cotiza ahora
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
+    </div>
+    <div class="final-cta-meta" data-mp-reveal data-mp-reveal-delay="400">
+      <span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4.5L6 21l1.5-7.5L2 9h7z"/></svg> 4.9/5 promedio</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Datos encriptados</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Cotización en 24h</span>
     </div>
   </section>
 
   <div id="mp-footer"></div>
 
-  <script src="/shared/nav-footer.js?v=6"></script>
+  <script src="/shared/nav-footer.js?v=7"></script>
   <script>
-    // Number counters
+    // ===== Scroll progress bar =====
+    (function() {
+      const bar = document.getElementById('mpProgress');
+      function update() {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        const p = h > 0 ? (window.scrollY / h) * 100 : 0;
+        bar.style.width = p + '%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // ===== Number counters =====
     (function() {
       const counters = document.querySelectorAll('[data-counter]');
       if (!counters.length) return;
       const animate = (el) => {
         const target = parseFloat(el.dataset.counter);
-        const dur = 1600;
+        const dur = 1800;
         const start = performance.now();
         const step = (now) => {
           const p = Math.min((now - start) / dur, 1);
@@ -705,94 +1483,146 @@
       counters.forEach(c => io.observe(c));
     })();
 
-    // Parallax hero cards
+    // ===== Ticker on hero (5 ↔ 24) =====
     (function() {
+      const el = document.getElementById('heroTicker');
+      if (!el) return;
+      const values = ['5', '10', '24'];
+      let idx = 0;
+      setInterval(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-6px)';
+        setTimeout(() => {
+          idx = (idx + 1) % values.length;
+          el.textContent = values[idx];
+          el.style.transition = 'opacity .3s, transform .3s';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, 280);
+      }, 2400);
+    })();
+
+    // ===== Hero card 3D mouse tilt =====
+    (function() {
+      const stack = document.getElementById('heroStack');
+      if (!stack) return;
       const visual = document.getElementById('heroVisual');
-      const money = document.getElementById('heroCardMoney');
-      const approval = document.getElementById('heroCardApproval');
-      if (!visual) return;
       visual.addEventListener('mousemove', (e) => {
         const r = visual.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - 0.5;
         const y = (e.clientY - r.top) / r.height - 0.5;
-        money.style.transform = `rotate(-3deg) translate(${x * -18}px, ${y * -12}px)`;
-        approval.style.transform = `rotate(2deg) translate(${x * 12}px, ${y * 8}px)`;
+        stack.style.transform = `rotateY(${-8 + x * 10}deg) rotateX(${4 - y * 10}deg)`;
       });
       visual.addEventListener('mouseleave', () => {
-        money.style.transform = '';
-        approval.style.transform = '';
+        stack.style.transform = 'rotateY(-8deg) rotateX(4deg)';
       });
     })();
 
-    // === Magnetic buttons ===
+    // ===== Magnetic buttons =====
     (function() {
-      const btns = document.querySelectorAll('.mp-magnetic');
-      btns.forEach(btn => {
+      document.querySelectorAll('.mp-magnetic').forEach(btn => {
         btn.addEventListener('mousemove', (e) => {
           const r = btn.getBoundingClientRect();
           const x = e.clientX - r.left - r.width / 2;
           const y = e.clientY - r.top - r.height / 2;
-          btn.style.transform = `translate(${x * 0.18}px, ${y * 0.28}px)`;
+          btn.style.transform = `translate(${x * 0.2}px, ${y * 0.3}px)`;
         });
         btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
       });
     })();
 
-    // === 3D tilt cards ===
-    (function() {
-      const cards = document.querySelectorAll('.mp-tilt');
-      cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const r = card.getBoundingClientRect();
-          const cx = e.clientX - r.left;
-          const cy = e.clientY - r.top;
-          const rotY = ((cx / r.width) - 0.5) * 10;
-          const rotX = ((cy / r.height) - 0.5) * -10;
-          card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-6px)`;
-        });
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = '';
-        });
-      });
-    })();
-
-    // === Custom cursor follower ===
+    // ===== Custom cursor =====
     (function() {
       if (window.matchMedia('(hover: none), (max-width: 900px)').matches) return;
       const dot = document.createElement('div');
       dot.className = 'mp-cursor';
       document.body.appendChild(dot);
       let tx = 0, ty = 0, cx = 0, cy = 0;
-      window.addEventListener('mousemove', (e) => {
-        tx = e.clientX; ty = e.clientY;
-        dot.classList.add('is-visible');
-      });
+      window.addEventListener('mousemove', (e) => { tx = e.clientX; ty = e.clientY; dot.classList.add('is-visible'); });
       window.addEventListener('mouseleave', () => dot.classList.remove('is-visible'));
       function tick() {
-        cx += (tx - cx) * 0.18;
-        cy += (ty - cy) * 0.18;
+        cx += (tx - cx) * 0.2;
+        cy += (ty - cy) * 0.2;
         dot.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
         requestAnimationFrame(tick);
       }
       requestAnimationFrame(tick);
-      const hoverables = document.querySelectorAll('a, button, .mp-card-hover, .mp-tilt, .compare-col');
+      const hoverables = document.querySelectorAll('a, button, .bento-card, .testimonial-card-h, .compare-col');
       hoverables.forEach(el => {
         el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
         el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
       });
     })();
 
-    // === Smooth scroll for anchor links ===
+    // ===== Timeline progress + dot activation on scroll =====
     (function() {
-      document.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', (e) => {
-          const href = a.getAttribute('href');
-          if (!href || href === '#') return;
-          const target = document.querySelector(href);
-          if (target) {
-            e.preventDefault();
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const timeline = document.getElementById('timeline');
+      const progress = document.getElementById('timelineProgress');
+      if (!timeline) return;
+      const items = timeline.querySelectorAll('.timeline-item');
+      function update() {
+        const r = timeline.getBoundingClientRect();
+        const total = r.height;
+        const viewMid = window.innerHeight * 0.5;
+        const passed = Math.max(0, Math.min(total, viewMid - r.top));
+        const pct = (passed / total) * 100;
+        progress.style.height = pct + '%';
+        items.forEach(it => {
+          const ir = it.getBoundingClientRect();
+          if (ir.top < viewMid && ir.bottom > 0) it.classList.add('is-active');
+          else it.classList.remove('is-active');
+        });
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // ===== Comparison bar fills =====
+    (function() {
+      const bars = document.querySelectorAll('.compare-bar');
+      if (!bars.length) return;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const fill = e.target.dataset.barFill || 1;
+            e.target.querySelector('.compare-bar-fill').style.setProperty('--fill', fill);
+            e.target.classList.add('is-visible');
+            io.unobserve(e.target);
           }
+        });
+      }, { threshold: 0.5 });
+      bars.forEach(b => io.observe(b));
+    })();
+
+    // ===== Testimonials horizontal scroll =====
+    (function() {
+      const track = document.getElementById('testimonialsTrack');
+      const prev = document.getElementById('testimonialsPrev');
+      const next = document.getElementById('testimonialsNext');
+      if (!track) return;
+      function step() { return track.querySelector('.testimonial-card-h').offsetWidth + 24; }
+      prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+      next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+      // auto-scroll
+      let auto = setInterval(() => {
+        if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+          track.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          track.scrollBy({ left: step(), behavior: 'smooth' });
+        }
+      }, 5000);
+      track.addEventListener('pointerdown', () => clearInterval(auto));
+    })();
+
+    // ===== FAQ accordion =====
+    (function() {
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const btn = item.querySelector('.faq-q');
+        const ans = item.querySelector('.faq-a');
+        btn.addEventListener('click', () => {
+          const open = item.classList.toggle('is-open');
+          if (open) ans.style.maxHeight = ans.scrollHeight + 'px';
+          else ans.style.maxHeight = '';
         });
       });
     })();
