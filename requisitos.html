@@ -4,167 +4,129 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Requisitos | MaxiPrest Panamá</title>
-  <meta name="description" content="Cinco requisitos simples para solicitar tu préstamo personal en MaxiPrest. Sin papeleo excesivo." />
+  <meta name="description" content="Cinco requisitos simples para cotizar tu préstamo personal en MaxiPrest. Sin papeleo innecesario." />
   <link rel="icon" href="/public/logo-mark.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="/shared/theme.css?v=7" rel="stylesheet" />
+  <link href="/shared/theme.css?v=8" rel="stylesheet" />
   <style>
-    .page-hero {
-      padding: calc(var(--mp-nav-h) + 80px) 24px 80px;
-      text-align: center;
-      position: relative;
-    }
-    .page-hero h1 { font-family: var(--mp-font-display); font-weight: 400; font-size: clamp(48px, 8vw, 120px); line-height: 0.98; letter-spacing: -0.025em; margin: 24px auto 24px; max-width: 1100px; }
-    .page-hero h1 em { color: var(--mp-gold-deep); font-style: italic; }
-    .page-hero p { color: var(--mp-ink-mute); font-size: 18px; max-width: 560px; margin: 0 auto; }
+    .mp-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--mp-gold), var(--mp-gold-deep)); z-index: 99; box-shadow: 0 0 12px rgba(201,169,97,0.5); transition: width 0.1s linear; }
+    .mp-noise { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); mix-blend-mode: multiply; }
 
-    /* Big requirements list */
-    .req-list { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-    .req {
-      display: grid;
-      grid-template-columns: 120px 1fr 1fr;
-      gap: 48px;
-      padding: 64px 0;
-      border-top: 1px solid var(--mp-line);
-      align-items: start;
-      position: relative;
-    }
+    .page-hero { padding: calc(var(--mp-nav-h) + 96px) 24px 80px; text-align: center; position: relative; overflow: hidden; }
+    .page-hero-mesh { position: absolute; inset: 0; pointer-events: none; opacity: 0.5; background: radial-gradient(circle at 20% 30%, var(--mp-gold-soft) 0%, transparent 36%), radial-gradient(circle at 80% 70%, var(--mp-gold-tint) 0%, transparent 36%); filter: blur(34px); animation: mesh-shift 20s ease-in-out infinite alternate; z-index: 0; }
+    @keyframes mesh-shift { 0% { transform: translate(0%, 0%) scale(1); } 100% { transform: translate(2%, -2%) scale(1.08); } }
+    .page-hero > * { position: relative; z-index: 2; }
+    .page-hero h1 { font-family: var(--mp-font-display); font-weight: 400; font-size: clamp(48px, 8vw, 120px); line-height: 0.96; letter-spacing: -0.03em; margin: 24px auto 24px; max-width: 1100px; }
+    .page-hero h1 em { color: var(--mp-gold-deep); font-style: italic; }
+    .page-hero p { color: var(--mp-ink-mute); font-size: 18px; max-width: 580px; margin: 0 auto; line-height: 1.6; }
+
+    /* Requirements timeline */
+    .req-list-wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; }
+    .req-list { position: relative; padding-left: 80px; }
+    .req-list::before { content: ''; position: absolute; left: 28px; top: 32px; bottom: 32px; width: 2px; background: var(--mp-line); }
+    .req-line-progress { position: absolute; left: 28px; top: 32px; width: 2px; background: linear-gradient(180deg, var(--mp-gold), var(--mp-gold-deep)); height: 0%; transition: height 0.2s linear; box-shadow: 0 0 12px rgba(201,169,97,0.4); }
+
+    .req { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; padding: 56px 0; border-top: 1px solid var(--mp-line); align-items: center; position: relative; cursor: pointer; user-select: none; }
     .req:last-child { border-bottom: 1px solid var(--mp-line); }
-    .req-check {
-      cursor: pointer;
-      user-select: none;
-    }
-    .req-check input { position: absolute; opacity: 0; pointer-events: none; }
-    .req-num {
-      font-family: var(--mp-font-display);
-      font-weight: 300;
-      font-size: 72px;
-      color: var(--mp-ink-soft);
-      line-height: 1;
-      letter-spacing: -0.02em;
-      transition: color .35s var(--mp-ease);
-    }
-    .req-check input:checked ~ .req-num { color: var(--mp-gold-deep); }
-    .req-check input:checked ~ .req-check-mark {
-      background: var(--mp-success);
-      border-color: var(--mp-success);
-    }
-    .req-check input:checked ~ .req-check-mark::after {
-      content: '';
-      display: block;
-      width: 8px; height: 14px;
-      border: solid white;
-      border-width: 0 2.5px 2.5px 0;
-      transform: rotate(45deg);
-      margin-top: -2px;
-    }
-    .req-check-mark {
-      position: absolute;
-      top: 12px; right: -8px;
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      border: 1.5px solid var(--mp-line-strong);
-      display: flex; align-items: center; justify-content: center;
-      background: var(--mp-bg);
-      transition: all .3s var(--mp-ease);
-    }
-    .req-body h2 {
-      font-family: var(--mp-font-display);
-      font-weight: 400;
-      font-size: clamp(32px, 4vw, 52px);
-      letter-spacing: -0.02em;
-      margin: 0 0 24px;
-      line-height: 1.05;
-    }
-    .req-body p { color: var(--mp-ink-mute); font-size: 16px; line-height: 1.7; max-width: 480px; margin: 0; }
-    .req-visual {
-      background: var(--mp-bg-soft);
-      border-radius: var(--mp-radius-lg);
-      padding: 32px;
-      border: 1px solid var(--mp-line);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      aspect-ratio: 4/3;
-      position: relative;
-      overflow: hidden;
-    }
-    .req-visual::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 30%, var(--mp-gold-tint), transparent 60%);
-      opacity: .6;
-    }
+    .req input { position: absolute; opacity: 0; pointer-events: none; }
+    .req::before { content: ''; position: absolute; left: -60px; top: 80px; width: 16px; height: 16px; border-radius: 50%; background: var(--mp-bg); border: 2px solid var(--mp-line-strong); transition: all .4s var(--mp-ease); z-index: 2; }
+    .req.is-active::before { background: var(--mp-gold); border-color: var(--mp-gold); box-shadow: 0 0 0 10px var(--mp-gold-tint), 0 0 16px rgba(201,169,97,0.6); transform: scale(1.25); }
+
+    .req-head { display: flex; align-items: center; gap: 18px; margin-bottom: 16px; }
+    .req-num { font-family: var(--mp-font-mono); font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mp-gold-deep); font-weight: 600; }
+    .req-check-mark { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--mp-line-strong); display: inline-flex; align-items: center; justify-content: center; background: var(--mp-bg); transition: all .3s var(--mp-ease); flex-shrink: 0; }
+    .req input:checked ~ .req-body .req-head .req-check-mark { background: var(--mp-success); border-color: var(--mp-success); }
+    .req input:checked ~ .req-body .req-head .req-check-mark::after { content: ''; display: block; width: 8px; height: 14px; border: solid white; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); margin-top: -2px; }
+
+    .req-body h2 { font-family: var(--mp-font-display); font-weight: 400; font-size: clamp(28px, 3.5vw, 44px); letter-spacing: -0.02em; margin: 0 0 14px; line-height: 1.08; }
+    .req-body p { color: var(--mp-ink-mute); font-size: 16px; line-height: 1.7; max-width: 460px; margin: 0; }
+
+    .req-visual { background: var(--mp-bg-soft); border-radius: var(--mp-radius-lg); padding: 32px; border: 1px solid var(--mp-line); display: flex; align-items: center; justify-content: center; aspect-ratio: 4/3; position: relative; overflow: hidden; transition: all .5s var(--mp-ease); }
+    .req:hover .req-visual { transform: translateY(-4px); border-color: var(--mp-line-gold); box-shadow: var(--mp-shadow-md); }
+    .req-visual::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, var(--mp-gold-tint), transparent 60%); opacity: .6; transition: opacity .5s var(--mp-ease); }
+    .req:hover .req-visual::before { opacity: 1; }
     .req-visual > * { position: relative; z-index: 1; }
     .req-visual svg { width: 60%; height: auto; color: var(--mp-ink-2); }
 
     @media (max-width: 900px) {
-      .req { grid-template-columns: 1fr; gap: 24px; padding: 48px 0; }
-      .req-check { display: flex; align-items: center; gap: 16px; }
-      .req-check-mark { position: static; }
+      .req-list { padding-left: 56px; }
+      .req-list::before, .req-line-progress { left: 16px; }
+      .req::before { left: -48px; }
+      .req { grid-template-columns: 1fr; gap: 28px; padding: 40px 0; }
       .req-visual { aspect-ratio: 16/9; }
     }
 
-    /* Progress reveal */
-    .req-progress {
-      position: sticky;
-      top: 96px;
-      background: var(--mp-bg);
-      z-index: 5;
-      padding: 16px 24px;
-      border: 1px solid var(--mp-line);
-      border-radius: var(--mp-radius-pill);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      max-width: 360px;
-      margin: 0 auto -20px;
-      box-shadow: var(--mp-shadow-sm);
-    }
-    .req-progress-bar {
-      flex: 1;
-      height: 4px;
-      background: var(--mp-line);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .req-progress-bar > div { height: 100%; background: linear-gradient(90deg, var(--mp-gold), var(--mp-gold-deep)); width: 0%; transition: width .5s var(--mp-ease); }
-    .req-progress-count { font-family: var(--mp-font-mono); font-size: 13px; font-weight: 600; color: var(--mp-ink); }
+    /* Sticky progress bar */
+    .req-progress { position: sticky; top: 96px; background: var(--mp-bg); z-index: 5; padding: 14px 22px; border: 1px solid var(--mp-line); border-radius: var(--mp-radius-pill); display: flex; align-items: center; gap: 16px; max-width: 380px; margin: 32px auto -20px; box-shadow: var(--mp-shadow-md); }
+    .req-progress-bar { flex: 1; height: 6px; background: var(--mp-line); border-radius: 6px; overflow: hidden; }
+    .req-progress-bar > div { height: 100%; background: linear-gradient(90deg, var(--mp-gold), var(--mp-gold-deep)); width: 0%; transition: width .5s var(--mp-ease); box-shadow: 0 0 12px rgba(201,169,97,0.4); }
+    .req-progress-count { font-family: var(--mp-font-mono); font-size: 13px; font-weight: 700; color: var(--mp-ink); }
 
-    .ready-banner {
-      background: var(--mp-ink);
-      color: var(--mp-bg);
-      padding: 48px;
-      border-radius: var(--mp-radius-lg);
-      margin: 64px auto 0;
-      max-width: 880px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all .6s var(--mp-ease);
-      pointer-events: none;
-    }
+    /* Ready banner */
+    .ready-banner-wrap { max-width: 880px; margin: 64px auto 0; padding: 0 24px; }
+    .ready-banner { background: var(--mp-ink); color: var(--mp-bg); padding: 56px; border-radius: var(--mp-radius-lg); text-align: center; opacity: 0; transform: translateY(20px); transition: all .6s var(--mp-ease); pointer-events: none; position: relative; overflow: hidden; }
     .ready-banner.is-ready { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .ready-banner::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, var(--mp-gold-deep) 0%, transparent 40%); opacity: .15; animation: rotate-slow 22s linear infinite; pointer-events: none; }
+    @keyframes rotate-slow { to { transform: rotate(360deg); } }
+    .ready-banner > * { position: relative; z-index: 1; }
     .ready-banner h3 { font-family: var(--mp-font-display); font-size: clamp(28px, 4vw, 44px); margin: 0 0 12px; font-weight: 400; line-height: 1.1; }
     .ready-banner h3 em { color: var(--mp-gold); font-style: italic; }
     .ready-banner p { color: rgba(255,255,255,0.7); margin: 0 0 28px; }
+
+    /* Documents grid */
+    .docs-section { padding: clamp(80px, 12vw, 140px) 24px; background: var(--mp-bg-soft); }
+    .docs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+    .doc-card { background: var(--mp-bg); border: 1px solid var(--mp-line); border-radius: var(--mp-radius-lg); padding: 36px; transition: all .4s var(--mp-ease); position: relative; overflow: hidden; }
+    .doc-card:hover { transform: translateY(-6px); border-color: var(--mp-line-gold); box-shadow: var(--mp-shadow-md); }
+    .doc-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--mp-gold-tint), transparent 60%); opacity: 0; transition: opacity .4s var(--mp-ease); pointer-events: none; }
+    .doc-card:hover::before { opacity: 1; }
+    .doc-card > * { position: relative; z-index: 1; }
+    .doc-icon-wrap { width: 56px; height: 56px; border-radius: 14px; background: var(--mp-bg-tint); display: flex; align-items: center; justify-content: center; color: var(--mp-gold-deep); margin-bottom: 24px; transition: transform .35s var(--mp-ease); }
+    .doc-card:hover .doc-icon-wrap { transform: rotate(-6deg) scale(1.08); background: var(--mp-ink); color: var(--mp-gold); }
+    .doc-card h3 { font-family: var(--mp-font-display); font-size: 22px; font-weight: 400; margin: 0 0 8px; }
+    .doc-card p { color: var(--mp-ink-mute); font-size: 14px; line-height: 1.6; margin: 0; }
+    @media (max-width: 720px) { .docs-grid { grid-template-columns: 1fr; } }
+
+    /* Final CTA */
+    .final-cta { padding: clamp(80px, 12vw, 140px) 24px; text-align: center; background: radial-gradient(ellipse 60% 50% at 50% 30%, var(--mp-gold-tint) 0%, transparent 60%), var(--mp-bg); position: relative; overflow: hidden; }
+    .final-orb { position: absolute; width: 480px; height: 480px; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, var(--mp-gold-soft) 0%, transparent 70%); filter: blur(40px); opacity: .55; animation: orb-float 14s ease-in-out infinite; pointer-events: none; }
+    @keyframes orb-float { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.15); } }
+    .final-cta h2 { font-family: var(--mp-font-display); font-size: clamp(40px, 6vw, 84px); line-height: 1.02; font-weight: 400; margin: 0 0 24px; letter-spacing: -0.025em; position: relative; z-index: 1; }
+    .final-cta h2 em { color: var(--mp-gold-deep); font-style: italic; }
+    .final-cta p { color: var(--mp-ink-mute); font-size: 17px; max-width: 600px; margin: 0 auto 32px; position: relative; z-index: 1; }
+
+    /* Premium buttons */
+    .mp-magnetic { transition: transform .15s var(--mp-ease) !important; }
+    .mp-btn-shine { position: relative; isolation: isolate; }
+    .mp-btn-shine::after { content: ''; position: absolute; inset: -2px; border-radius: var(--mp-radius-pill); background: conic-gradient(from var(--shine-angle, 0deg), transparent 0deg, var(--mp-gold) 60deg, transparent 120deg); z-index: -1; opacity: 0; transition: opacity .3s var(--mp-ease); animation: shine-rotate 4s linear infinite; }
+    .mp-btn-shine:hover::after { opacity: 1; }
+    @property --shine-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+    @keyframes shine-rotate { to { --shine-angle: 360deg; } }
+
+    /* Cursor */
+    .mp-cursor { position: fixed; width: 8px; height: 8px; border-radius: 50%; background: var(--mp-gold); pointer-events: none; z-index: 1000; transform: translate(-50%, -50%); transition: width .2s, height .2s, opacity .25s; opacity: 0; mix-blend-mode: difference; will-change: transform; }
+    .mp-cursor.is-visible { opacity: 1; }
+    .mp-cursor.is-hover { width: 44px; height: 44px; background: var(--mp-gold-soft); }
+    @media (hover: none), (max-width: 900px) { .mp-cursor { display: none; } }
   </style>
 </head>
 <body>
 
+  <div class="mp-progress" id="mpProgress"></div>
+  <div class="mp-noise" aria-hidden="true"></div>
   <div id="mp-nav"></div>
 
   <section class="page-hero">
+    <div class="page-hero-mesh" aria-hidden="true"></div>
     <div class="mp-hero-grid-bg"></div>
     <span class="mp-eyebrow" data-mp-reveal>Lo que necesitas</span>
     <h1 data-mp-reveal data-mp-reveal-delay="100">
       Cinco requisitos.<br/>Eso es <em>todo</em>.
     </h1>
     <p data-mp-reveal data-mp-reveal-delay="200">
-      Sin papeleo excesivo, sin tramitología innecesaria. Marca los que ya tienes para ver tu progreso.
+      Sin papeleo innecesario, sin trámites bancarios. Marca los que ya tienes para ver tu progreso.
     </p>
   </section>
 
@@ -173,139 +135,252 @@
     <div class="req-progress-count"><span id="reqCount">0</span> / 5</div>
   </div>
 
-  <section class="req-list">
-    <label class="req req-check" data-mp-reveal>
-      <input type="checkbox" class="req-cb" />
-      <div class="req-num">01</div>
-      <div class="req-check-mark"></div>
-      <div class="req-body">
-        <h2>Carta de trabajo</h2>
-        <p>Documento original de tu empleador que certifique tu posición, salario y antigüedad. Vigencia menor a 30 días.</p>
-      </div>
-      <div class="req-visual">
-        <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="20" y="20" width="160" height="110" rx="6" fill="white"/>
-          <line x1="40" y1="48" x2="120" y2="48"/>
-          <line x1="40" y1="62" x2="160" y2="62"/>
-          <line x1="40" y1="76" x2="140" y2="76"/>
-          <line x1="40" y1="90" x2="100" y2="90"/>
-          <rect x="120" y="100" width="40" height="20" rx="2" fill="#C9A961" stroke="none"/>
-        </svg>
-      </div>
-    </label>
+  <div class="req-list-wrap">
+    <div class="req-list" id="reqList">
+      <div class="req-line-progress" id="reqLineProgress"></div>
 
-    <label class="req req-check" data-mp-reveal>
-      <input type="checkbox" class="req-cb" />
-      <div class="req-num">02</div>
-      <div class="req-check-mark"></div>
-      <div class="req-body">
-        <h2>Ficha talonaria</h2>
-        <p>Tus últimas tres fichas de pago para verificar tu salario neto y deducciones. Sirven impresas o en PDF.</p>
-      </div>
-      <div class="req-visual">
-        <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="30" y="30" width="120" height="80" rx="4" fill="white"/>
-          <rect x="40" y="40" width="60" height="6" fill="#0A0A0A" stroke="none"/>
-          <line x1="40" y1="58" x2="140" y2="58"/>
-          <line x1="40" y1="70" x2="130" y2="70"/>
-          <line x1="40" y1="82" x2="120" y2="82"/>
-          <text x="100" y="100" font-family="JetBrains Mono" font-size="14" font-weight="600" fill="#C9A961" stroke="none" text-anchor="end">B/. 1,250</text>
-          <rect x="155" y="50" width="35" height="50" rx="3" fill="#FAF8F3" stroke="#C9A961"/>
-        </svg>
-      </div>
-    </label>
+      <label class="req" data-mp-reveal>
+        <input type="checkbox" class="req-cb" />
+        <div class="req-body">
+          <div class="req-head">
+            <div class="req-check-mark"></div>
+            <span class="req-num">Requisito 01</span>
+          </div>
+          <h2>Carta de trabajo</h2>
+          <p>Documento original de tu empleador que certifique tu posición, salario y antigüedad. Vigencia menor a 30 días.</p>
+        </div>
+        <div class="req-visual">
+          <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="20" y="20" width="160" height="110" rx="6" fill="white"/>
+            <line x1="40" y1="48" x2="120" y2="48"/>
+            <line x1="40" y1="62" x2="160" y2="62"/>
+            <line x1="40" y1="76" x2="140" y2="76"/>
+            <line x1="40" y1="90" x2="100" y2="90"/>
+            <rect x="120" y="100" width="40" height="20" rx="2" fill="#C9A961" stroke="none"/>
+          </svg>
+        </div>
+      </label>
 
-    <label class="req req-check" data-mp-reveal>
-      <input type="checkbox" class="req-cb" />
-      <div class="req-num">03</div>
-      <div class="req-check-mark"></div>
-      <div class="req-body">
-        <h2>Cédula vigente</h2>
-        <p>Cédula de identidad personal panameña en buen estado y dentro de su periodo de vigencia.</p>
-      </div>
-      <div class="req-visual">
-        <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="30" y="30" width="140" height="90" rx="8" fill="white"/>
-          <rect x="40" y="42" width="50" height="60" rx="4" fill="#EBDDB9" stroke="#C9A961"/>
-          <circle cx="65" cy="62" r="10" fill="#C9A961" stroke="none"/>
-          <path d="M50 90 Q65 76 80 90" fill="#C9A961" stroke="none"/>
-          <line x1="100" y1="50" x2="160" y2="50"/>
-          <line x1="100" y1="62" x2="155" y2="62"/>
-          <line x1="100" y1="74" x2="150" y2="74"/>
-          <text x="100" y="100" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#0A0A0A" stroke="none">8-123-4567</text>
-        </svg>
-      </div>
-    </label>
+      <label class="req" data-mp-reveal>
+        <input type="checkbox" class="req-cb" />
+        <div class="req-body">
+          <div class="req-head">
+            <div class="req-check-mark"></div>
+            <span class="req-num">Requisito 02</span>
+          </div>
+          <h2>Ficha talonaria</h2>
+          <p>Tus últimas tres fichas de pago para verificar tu salario neto y deducciones. Sirven impresas o en PDF.</p>
+        </div>
+        <div class="req-visual">
+          <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="30" y="30" width="120" height="80" rx="4" fill="white"/>
+            <rect x="40" y="40" width="60" height="6" fill="#0A0A0A" stroke="none"/>
+            <line x1="40" y1="58" x2="140" y2="58"/>
+            <line x1="40" y1="70" x2="130" y2="70"/>
+            <line x1="40" y1="82" x2="120" y2="82"/>
+            <text x="100" y="100" font-family="JetBrains Mono" font-size="14" font-weight="600" fill="#C9A961" stroke="none" text-anchor="end">B/. 1,250</text>
+            <rect x="155" y="50" width="35" height="50" rx="3" fill="#FAF8F3" stroke="#C9A961"/>
+          </svg>
+        </div>
+      </label>
 
-    <label class="req req-check" data-mp-reveal>
-      <input type="checkbox" class="req-cb" />
-      <div class="req-num">04</div>
-      <div class="req-check-mark"></div>
-      <div class="req-body">
-        <h2>Residente en Panamá</h2>
-        <p>Ciudadano panameño o extranjero con residencia legal vigente. Aplicamos en todo el territorio nacional.</p>
-      </div>
-      <div class="req-visual">
-        <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M60 100 L100 40 L140 100 Z" fill="#C9A961" stroke="none" opacity=".15"/>
-          <circle cx="100" cy="75" r="38" stroke="#C9A961" stroke-width="1.5" fill="none"/>
-          <circle cx="100" cy="75" r="8" fill="#0A0A0A" stroke="none"/>
-          <path d="M100 50 L100 100 M75 75 L125 75" stroke="#C9A961" stroke-width="1"/>
-          <text x="100" y="135" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#0A0A0A" stroke="none" text-anchor="middle">PANAMÁ</text>
-        </svg>
-      </div>
-    </label>
+      <label class="req" data-mp-reveal>
+        <input type="checkbox" class="req-cb" />
+        <div class="req-body">
+          <div class="req-head">
+            <div class="req-check-mark"></div>
+            <span class="req-num">Requisito 03</span>
+          </div>
+          <h2>Cédula vigente</h2>
+          <p>Cédula de identidad personal panameña en buen estado y dentro de su periodo de vigencia. Extranjeros con carné de residente.</p>
+        </div>
+        <div class="req-visual">
+          <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="30" y="30" width="140" height="90" rx="8" fill="white"/>
+            <rect x="40" y="42" width="50" height="60" rx="4" fill="#EBDDB9" stroke="#C9A961"/>
+            <circle cx="65" cy="62" r="10" fill="#C9A961" stroke="none"/>
+            <path d="M50 90 Q65 76 80 90" fill="#C9A961" stroke="none"/>
+            <line x1="100" y1="50" x2="160" y2="50"/>
+            <line x1="100" y1="62" x2="155" y2="62"/>
+            <line x1="100" y1="74" x2="150" y2="74"/>
+            <text x="100" y="100" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#0A0A0A" stroke="none">8-123-4567</text>
+          </svg>
+        </div>
+      </label>
 
-    <label class="req req-check" data-mp-reveal>
-      <input type="checkbox" class="req-cb" />
-      <div class="req-num">05</div>
-      <div class="req-check-mark"></div>
-      <div class="req-body">
-        <h2>Salario mínimo B/. 600 + edad 20+</h2>
-        <p>Ingreso mensual comprobable desde B/. 600 y mayor de 20 años. Aplicamos para asalariados, gobierno, independientes y jubilados.</p>
-      </div>
-      <div class="req-visual">
-        <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M30 110 L60 80 L90 95 L120 60 L160 75" stroke="#C9A961" stroke-width="2" fill="none"/>
-          <circle cx="60" cy="80" r="4" fill="#C9A961" stroke="none"/>
-          <circle cx="90" cy="95" r="4" fill="#C9A961" stroke="none"/>
-          <circle cx="120" cy="60" r="4" fill="#C9A961" stroke="none"/>
-          <circle cx="160" cy="75" r="4" fill="#C9A961" stroke="none"/>
-          <text x="100" y="130" font-family="JetBrains Mono" font-size="13" font-weight="600" fill="#0A0A0A" stroke="none" text-anchor="middle">B/. 600 / mes</text>
-        </svg>
-      </div>
-    </label>
-  </section>
+      <label class="req" data-mp-reveal>
+        <input type="checkbox" class="req-cb" />
+        <div class="req-body">
+          <div class="req-head">
+            <div class="req-check-mark"></div>
+            <span class="req-num">Requisito 04</span>
+          </div>
+          <h2>Residente en Panamá</h2>
+          <p>Ciudadano panameño o extranjero con residencia legal vigente. Cotizamos en todo el territorio nacional.</p>
+        </div>
+        <div class="req-visual">
+          <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M60 100 L100 40 L140 100 Z" fill="#C9A961" stroke="none" opacity=".15"/>
+            <circle cx="100" cy="75" r="38" stroke="#C9A961" stroke-width="1.5" fill="none"/>
+            <circle cx="100" cy="75" r="8" fill="#0A0A0A" stroke="none"/>
+            <path d="M100 50 L100 100 M75 75 L125 75" stroke="#C9A961" stroke-width="1"/>
+            <text x="100" y="135" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#0A0A0A" stroke="none" text-anchor="middle">PANAMÁ</text>
+          </svg>
+        </div>
+      </label>
 
-  <div style="padding: 0 24px;">
+      <label class="req" data-mp-reveal>
+        <input type="checkbox" class="req-cb" />
+        <div class="req-body">
+          <div class="req-head">
+            <div class="req-check-mark"></div>
+            <span class="req-num">Requisito 05</span>
+          </div>
+          <h2>Salario mín. B/. 600 + edad 20+</h2>
+          <p>Ingreso mensual comprobable desde B/. 600 y mayor de 20 años. Cotizamos para asalariados, gobierno, independientes y jubilados.</p>
+        </div>
+        <div class="req-visual">
+          <svg viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M30 110 L60 80 L90 95 L120 60 L160 75" stroke="#C9A961" stroke-width="2" fill="none"/>
+            <circle cx="60" cy="80" r="4" fill="#C9A961" stroke="none"/>
+            <circle cx="90" cy="95" r="4" fill="#C9A961" stroke="none"/>
+            <circle cx="120" cy="60" r="4" fill="#C9A961" stroke="none"/>
+            <circle cx="160" cy="75" r="4" fill="#C9A961" stroke="none"/>
+            <text x="100" y="130" font-family="JetBrains Mono" font-size="13" font-weight="600" fill="#0A0A0A" stroke="none" text-anchor="middle">B/. 600 / mes</text>
+          </svg>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <div class="ready-banner-wrap">
     <div class="ready-banner" id="readyBanner">
-      <h3>Tienes todo lo necesario.<br/><em>Apliquemos ya</em>.</h3>
-      <p>Tienes los cinco requisitos. Ahora solo falta llenar el formulario.</p>
-      <a class="mp-btn mp-btn-gold-solid" href="/aplica" style="padding: 18px 36px;">
-        Aplicar ahora
+      <h3>Tienes todo lo necesario.<br/><em>Cotizemos ya</em>.</h3>
+      <p>Cuando estés listo, llena el formulario y nosotros gestionamos el resto.</p>
+      <a class="mp-btn mp-btn-gold-solid mp-magnetic mp-btn-shine" href="/aplica" style="padding: 18px 36px;">
+        Cotiza ahora
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
     </div>
   </div>
 
-  <div style="height: 120px;"></div>
+  <section class="docs-section">
+    <div class="mp-container">
+      <div style="text-align: center; max-width: 720px; margin: 0 auto 0;">
+        <span class="mp-eyebrow" data-mp-reveal>Los 3 documentos</span>
+        <h2 class="mp-display" data-mp-reveal data-mp-reveal-delay="100" style="font-size: clamp(36px, 5vw, 60px); margin: 24px 0 16px;">
+          Foto directo desde tu <em style="font-style: italic; color: var(--mp-gold-deep);">celular</em>.
+        </h2>
+        <p data-mp-reveal data-mp-reveal-delay="200" style="color: var(--mp-ink-mute); font-size: 16px;">
+          Nuestro formulario abre tu cámara con un marco guía. Apuntas, capturas, listo.
+        </p>
+      </div>
+
+      <div class="docs-grid">
+        <div class="doc-card" data-mp-reveal>
+          <div class="doc-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="9" cy="13" r="3"/><line x1="14" y1="10" x2="18" y2="10"/><line x1="14" y1="14" x2="18" y2="14"/></svg>
+          </div>
+          <h3>Cédula vigente</h3>
+          <p>Foto del frente. Marco guía proporcional a tarjeta ID-1 ISO.</p>
+        </div>
+        <div class="doc-card" data-mp-reveal data-mp-reveal-delay="100">
+          <div class="doc-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <h3>Carta de trabajo</h3>
+          <p>Vigencia menor a 30 días. Foto completa de la hoja.</p>
+        </div>
+        <div class="doc-card" data-mp-reveal data-mp-reveal-delay="200">
+          <div class="doc-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="22"/><line x1="6" y1="6" x2="18" y2="6"/><line x1="6" y1="10" x2="18" y2="10"/><line x1="6" y1="14" x2="18" y2="14"/><line x1="6" y1="18" x2="18" y2="18"/></svg>
+          </div>
+          <h3>Ficha talonaria</h3>
+          <p>Últimas 3 fichas. Verifica salario y deducciones.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="final-orb" aria-hidden="true"></div>
+    <span class="mp-eyebrow" data-mp-reveal>Listos para cotizar</span>
+    <h2 data-mp-reveal data-mp-reveal-delay="100">
+      ¿Tienes lo necesario?<br/><em>Cotiza ya</em>.
+    </h2>
+    <p data-mp-reveal data-mp-reveal-delay="200">Cinco minutos. Sin filas. Sin moverte de donde estás.</p>
+    <div data-mp-reveal data-mp-reveal-delay="300">
+      <a class="mp-btn mp-btn-gold-solid mp-magnetic mp-btn-shine" href="/aplica" style="padding: 22px 40px;">
+        Cotiza ahora
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
 
   <div id="mp-footer"></div>
-  <script src="/shared/nav-footer.js?v=7"></script>
+  <script src="/shared/nav-footer.js?v=8"></script>
   <script>
+    // Scroll progress
+    (function() {
+      const bar = document.getElementById('mpProgress');
+      function update() { const h = document.documentElement.scrollHeight - window.innerHeight; bar.style.width = h > 0 ? (window.scrollY / h) * 100 + '%' : '0%'; }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+    // Magnetic
+    (function() {
+      document.querySelectorAll('.mp-magnetic').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const r = btn.getBoundingClientRect();
+          btn.style.transform = `translate(${(e.clientX - r.left - r.width/2)*0.2}px, ${(e.clientY - r.top - r.height/2)*0.3}px)`;
+        });
+        btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+      });
+    })();
+    // Cursor
+    (function() {
+      if (window.matchMedia('(hover: none), (max-width: 900px)').matches) return;
+      const dot = document.createElement('div'); dot.className = 'mp-cursor'; document.body.appendChild(dot);
+      let tx=0, ty=0, cx=0, cy=0;
+      window.addEventListener('mousemove', e => { tx=e.clientX; ty=e.clientY; dot.classList.add('is-visible'); });
+      window.addEventListener('mouseleave', () => dot.classList.remove('is-visible'));
+      (function tick() { cx += (tx-cx)*0.2; cy += (ty-cy)*0.2; dot.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`; requestAnimationFrame(tick); })();
+      document.querySelectorAll('a, button, .req, .doc-card').forEach(el => {
+        el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
+        el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
+      });
+    })();
+    // Checklist + timeline
     (function() {
       const checks = document.querySelectorAll('.req-cb');
       const bar = document.getElementById('reqBar');
       const count = document.getElementById('reqCount');
       const banner = document.getElementById('readyBanner');
-      function update() {
+      const lineProgress = document.getElementById('reqLineProgress');
+      const items = document.querySelectorAll('.req');
+      const list = document.getElementById('reqList');
+
+      function updateChecklist() {
         const checked = Array.from(checks).filter(c => c.checked).length;
         count.textContent = checked;
         bar.style.width = (checked / 5 * 100) + '%';
-        if (checked === 5) banner.classList.add('is-ready');
-        else banner.classList.remove('is-ready');
+        if (checked === 5) banner.classList.add('is-ready'); else banner.classList.remove('is-ready');
       }
-      checks.forEach(c => c.addEventListener('change', update));
+      checks.forEach(c => c.addEventListener('change', updateChecklist));
+
+      function updateScroll() {
+        const r = list.getBoundingClientRect();
+        const viewMid = window.innerHeight * 0.5;
+        const passed = Math.max(0, Math.min(r.height, viewMid - r.top));
+        lineProgress.style.height = (passed / r.height * 100) + '%';
+        items.forEach(it => {
+          const ir = it.getBoundingClientRect();
+          if (ir.top < viewMid && ir.bottom > 0) it.classList.add('is-active');
+          else it.classList.remove('is-active');
+        });
+      }
+      window.addEventListener('scroll', updateScroll, { passive: true });
+      updateScroll();
     })();
   </script>
 </body>
