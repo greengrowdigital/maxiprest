@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="/shared/theme.css?v=9" rel="stylesheet" />
+  <link href="/shared/theme.css?v=10" rel="stylesheet" />
   <style>
     .mp-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--mp-gold), var(--mp-gold-deep)); z-index: 99; box-shadow: 0 0 12px rgba(201,169,97,0.5); transition: width 0.1s linear; }
     .mp-noise { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); mix-blend-mode: multiply; }
@@ -51,13 +51,13 @@
     .map-card-info .mp-eyebrow::before { background: var(--mp-gold); }
     .map-visual { aspect-ratio: 5/3; max-width: 460px; margin-left: auto; position: relative; display: flex; align-items: center; justify-content: center; }
     .map-visual svg { width: 100%; height: 100%; display: block; }
-    .map-pin { position: absolute; top: 61.6%; left: 62%; width: 12px; height: 12px; border-radius: 50%; background: var(--mp-gold); box-shadow: 0 0 0 4px rgba(201,169,97,0.3), 0 0 12px rgba(201,169,97,0.6); transform: translate(-50%, -50%); z-index: 2; }
+    .map-pin { position: absolute; top: 62.5%; left: 58%; width: 12px; height: 12px; border-radius: 50%; background: var(--mp-gold); box-shadow: 0 0 0 4px rgba(201,169,97,0.3), 0 0 12px rgba(201,169,97,0.6); transform: translate(-50%, -50%); z-index: 2; }
     .map-pin::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid var(--mp-gold); opacity: .5; animation: mp-pulse 2.4s var(--mp-ease) infinite; }
     @keyframes mp-pulse { 0% { transform: scale(.9); opacity: .6; } 70% { transform: scale(2.4); opacity: 0; } 100% { opacity: 0; } }
     .map-pin-label {
       position: absolute;
-      top: calc(61.6% + 16px);
-      left: 62%;
+      top: calc(62.5% + 16px);
+      left: 58%;
       transform: translateX(-50%);
       font-family: var(--mp-font-mono);
       font-size: 10px;
@@ -180,46 +180,49 @@
       <div class="map-visual">
         <svg viewBox="0 0 400 240" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.2">
           <!-- Concentric guide circles around capital (Ciudad de Panamá) -->
-          <circle cx="248" cy="148" r="110" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 5"/>
-          <circle cx="248" cy="148" r="78" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 5"/>
-          <circle cx="248" cy="148" r="46" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 5"/>
+          <circle cx="232" cy="150" r="110" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 5"/>
+          <circle cx="232" cy="150" r="78" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 5"/>
+          <circle cx="232" cy="150" r="46" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 5"/>
 
-          <!-- Panama country outline — west (Costa Rica border) to east (Colombia/Darién) -->
+          <!-- Panama country outline — S-shape with Azuero Peninsula hanging south -->
           <path d="
-              M 22 100
-              C 30 88, 42 86, 56 94
-              C 64 86, 72 92, 82 88
-              C 92 94, 102 90, 112 96
-              C 122 92, 132 102, 144 100
-              C 156 92, 168 100, 180 102
-              C 194 94, 208 102, 220 108
-              C 232 100, 244 108, 256 112
-              C 270 104, 284 110, 296 116
-              C 308 110, 322 114, 334 120
-              C 346 116, 360 122, 372 128
-              C 380 134, 382 142, 376 152
-              C 366 158, 354 154, 342 150
-              C 330 156, 318 152, 306 148
-              C 294 154, 282 150, 272 156
-              C 264 168, 258 178, 248 174
-              C 240 168, 234 158, 228 152
-              C 218 158, 206 154, 196 150
-              C 186 156, 176 152, 168 158
-              C 162 168, 154 168, 146 162
-              C 138 156, 130 156, 122 160
-              C 112 156, 100 158, 92 154
-              C 80 158, 70 154, 60 150
-              C 48 152, 36 146, 28 138
-              C 22 130, 20 118, 22 108
+              M 32 102
+              C 40 88, 56 80, 72 84
+              C 86 80, 100 86, 114 84
+              C 132 80, 154 84, 176 82
+              C 204 80, 232 86, 258 90
+              C 282 88, 304 94, 324 102
+              C 344 108, 360 116, 372 128
+              C 380 138, 380 152, 372 162
+              C 362 168, 350 166, 340 162
+              C 326 166, 312 162, 300 158
+              C 286 156, 272 162, 260 168
+              C 250 174, 240 174, 232 168
+              C 224 162, 220 158, 216 156
+              C 213 168, 210 180, 206 192
+              C 202 206, 195 216, 186 218
+              C 176 218, 170 208, 168 196
+              C 165 184, 162 174, 158 168
+              C 142 170, 124 172, 108 168
+              C 88 164, 70 158, 56 150
+              C 44 142, 34 130, 30 116
+              C 28 108, 30 102, 32 102
               Z"
             fill="rgba(201,169,97,0.05)" stroke="#C9A961" stroke-width="1.3" stroke-linejoin="round"/>
 
-          <!-- Small islands (Pacific) - approximations -->
-          <ellipse cx="140" cy="182" rx="5" ry="3" fill="rgba(201,169,97,0.05)" stroke="#C9A961" stroke-width="0.8"/>
-          <ellipse cx="165" cy="190" rx="3" ry="2" fill="rgba(201,169,97,0.05)" stroke="#C9A961" stroke-width="0.8"/>
+          <!-- Bocas del Toro archipelago (NW) -->
+          <ellipse cx="48" cy="80" rx="6" ry="3" fill="rgba(201,169,97,0.05)" stroke="#C9A961" stroke-width="0.7" transform="rotate(-15 48 80)"/>
+          <ellipse cx="62" cy="74" rx="4" ry="2" fill="rgba(201,169,97,0.05)" stroke="#C9A961" stroke-width="0.7"/>
+
+          <!-- Las Perlas islands (Gulf of Panama) -->
+          <ellipse cx="252" cy="195" rx="2.5" ry="1.8" fill="rgba(201,169,97,0.05)" stroke="#C9A961" stroke-width="0.6"/>
+          <ellipse cx="260" cy="202" rx="1.8" ry="1.2" fill="rgba(201,169,97,0.05)" stroke="#C9A961" stroke-width="0.6"/>
+
+          <!-- Coiba island (Pacific west) -->
+          <ellipse cx="130" cy="200" rx="5" ry="3" fill="rgba(201,169,97,0.05)" stroke="#C9A961" stroke-width="0.7"/>
 
           <!-- Label -->
-          <text x="200" y="225" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="rgba(255,255,255,0.35)" stroke="none" text-anchor="middle" letter-spacing="3">PANAMÁ</text>
+          <text x="200" y="232" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="rgba(255,255,255,0.35)" stroke="none" text-anchor="middle" letter-spacing="3">PANAMÁ</text>
         </svg>
         <div class="map-pin"></div>
         <span class="map-pin-label">Ciudad de Panamá</span>
@@ -314,7 +317,7 @@
   </section>
 
   <div id="mp-footer"></div>
-  <script src="/shared/nav-footer.js?v=9"></script>
+  <script src="/shared/nav-footer.js?v=10"></script>
   <script>
     // Scroll progress
     (function() {
