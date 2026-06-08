@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="/shared/theme.css?v=11" rel="stylesheet" />
+  <link href="/shared/theme.css?v=12" rel="stylesheet" />
   <style>
     .mp-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--mp-gold), var(--mp-gold-deep)); z-index: 99; box-shadow: 0 0 12px rgba(201,169,97,0.5); transition: width 0.1s linear; }
     .mp-noise { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); mix-blend-mode: multiply; }
@@ -52,13 +52,13 @@
     .map-visual { aspect-ratio: 3/2; max-width: 480px; margin-left: auto; position: relative; display: flex; align-items: center; justify-content: center; }
     .map-visual .map-guide { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
     .map-shape { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; filter: drop-shadow(0 0 12px rgba(201,169,97,0.15)); }
-    .map-pin { position: absolute; top: 60%; left: 62%; width: 12px; height: 12px; border-radius: 50%; background: var(--mp-gold); box-shadow: 0 0 0 4px rgba(201,169,97,0.3), 0 0 12px rgba(201,169,97,0.6); transform: translate(-50%, -50%); z-index: 3; }
+    .map-pin { position: absolute; top: 53%; left: 60%; width: 12px; height: 12px; border-radius: 50%; background: var(--mp-gold); box-shadow: 0 0 0 4px rgba(201,169,97,0.3), 0 0 12px rgba(201,169,97,0.6); transform: translate(-50%, -50%); z-index: 3; }
     .map-pin::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid var(--mp-gold); opacity: .5; animation: mp-pulse 2.4s var(--mp-ease) infinite; }
     @keyframes mp-pulse { 0% { transform: scale(.9); opacity: .6; } 70% { transform: scale(2.4); opacity: 0; } 100% { opacity: 0; } }
     .map-pin-label {
       position: absolute;
-      top: calc(60% + 16px);
-      left: 62%;
+      top: calc(53% + 16px);
+      left: 60%;
       transform: translateX(-50%);
       font-family: var(--mp-font-mono);
       font-size: 10px;
@@ -196,7 +196,7 @@
           <circle cx="240" cy="140" r="78" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 5"/>
           <circle cx="240" cy="140" r="46" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 5"/>
         </svg>
-        <img class="map-shape" src="/public/panama.png" alt="Silueta de Panamá" />
+        <img class="map-shape" src="/public/panama.png?v=2" alt="Silueta de Panamá" />
         <div class="map-pin"></div>
         <span class="map-pin-label">Ciudad de Panamá</span>
         <span class="map-country-label">PANAMÁ</span>
@@ -291,7 +291,7 @@
   </section>
 
   <div id="mp-footer"></div>
-  <script src="/shared/nav-footer.js?v=11"></script>
+  <script src="/shared/nav-footer.js?v=12"></script>
   <script>
     // Scroll progress
     (function() {
